@@ -136,11 +136,11 @@ Apply professional typography principles to create readable, hierarchical, and a
 
 ---
 
-#### Interaction Designing
+#### Interaction Design
 
 Apply interaction design principles to create intuitive, responsive interfaces.
 
-**Location:** `skills/interaction-designing/`
+**Location:** `skills/interaction-design/`
 
 **Triggers on:** component behaviors, micro-interactions, loading states, transitions, user flows, accessibility patterns, animation timing
 

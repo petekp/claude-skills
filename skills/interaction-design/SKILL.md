@@ -1,5 +1,5 @@
 ---
-name: interaction-designing
+name: interaction-design
 description: Apply interaction design principles to create intuitive, responsive interfaces. Use when designing component behaviors, micro-interactions, loading states, transitions, user flows, accessibility patterns, or when the user asks about UX, animation timing, keyboard navigation, or progressive disclosure.
 ---
 
