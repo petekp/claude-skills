@@ -1,5 +1,5 @@
 ---
-name: stress-testing
+name: healthy-skepticism
 description: Stress-test ideas, find failure modes, and challenge assumptions constructively. Use when evaluating proposals, identifying risks, playing devil's advocate, pre-mortems, or when the user needs someone to find the holes before reality does.
 ---
 

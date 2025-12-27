@@ -25,11 +25,11 @@ cp -r claude-skills/skills/tutorial-writing ~/.claude/skills/
 
 ### Thinking Toolkit
 
-#### Stress-Testing
+#### Healthy Skepticism
 
 Stress-test ideas, find failure modes, and challenge assumptions constructively.
 
-**Location:** `skills/stress-testing/`
+**Location:** `skills/healthy-skepticism/`
 
 **Triggers on:** evaluating proposals, identifying risks, playing devil's advocate, pre-mortems, finding holes in plans
 
@@ -53,7 +53,7 @@ Think expansively and imaginatively without practical constraints.
 - Expansion techniques (10x question, time travel, inversion, combination)
 - Vision articulation methods (ideal day, newspaper test, the demo)
 - Constraint-breaking frameworks
-- Balances with Stress-Testing for "dream/evaluate" oscillation
+- Balances with Healthy Skepticism for "dream/evaluate" oscillation
 
 ---
 
