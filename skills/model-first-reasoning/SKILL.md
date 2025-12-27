@@ -7,6 +7,8 @@ description: Apply Model-First Reasoning (MFR) to code generation tasks. Use whe
 
 A rigorous code-generation methodology that REQUIRES constructing an explicit problem MODEL before any implementation. The model becomes a frozen contract that governs all code.
 
+For the full research and rationale behind this methodology, see the co-located file: `Model-First Reasoning LLM Agents.md`
+
 ## Core Principle
 
 **Phase 1 produces the MODEL. Phase 2 implements ONLY what the model specifies.**
