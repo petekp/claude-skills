@@ -1,4 +1,17 @@
 #!/bin/bash
+#
+# Syncs skills from this repository to ~/.claude/skills user directory.
+#
+# Usage:
+#   ./sync-skills.sh          # Sync all skills
+#   ./sync-skills.sh --prune  # Sync and remove orphaned skills from target
+#
+# Behavior:
+#   - Skills in repo overwrite matching skills in target (files added, updated, or removed)
+#   - .local* files in target are always preserved (user-specific configs not tracked in git)
+#   - Skills only in target are reported as orphaned but left untouched (use --prune to remove)
+#   - Can be run manually or via the post-commit git hook
+#
 
 set -e
 
@@ -20,6 +33,7 @@ for skill_dir in "$REPO_SKILLS"/*/; do
 
     mkdir -p "$target_skill_dir"
 
+    # Sync skill files, excluding local configs and macOS metadata
     rsync -av --delete \
         --exclude '.local*' \
         --exclude '*.local*' \
@@ -29,6 +43,7 @@ for skill_dir in "$REPO_SKILLS"/*/; do
     echo "  ✓ $skill_name"
 done
 
+# Detect skills in target that don't exist in repo
 repo_skills=$(ls -1 "$REPO_SKILLS" 2>/dev/null | sort)
 target_skills=$(ls -1 "$TARGET_DIR" 2>/dev/null | grep -v '^\.' | sort)
 
