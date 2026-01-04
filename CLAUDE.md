@@ -1,0 +1,4 @@
+- Never use IIFEs in React components.
+- Always prefer easy-to-read code over clever code.
+- Don't run the dev server unless there's a specific reason to do so. I typically run it myself outside Claude.
+- Never add extraneous comments or comment markers to generated code. Code should be self-documenting.
