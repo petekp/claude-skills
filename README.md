@@ -1,27 +1,59 @@
 # Claude Code Setup
 
-A ready-to-fork Claude Code configuration with skills, commands, agents, and hooks.
+A portable, version-controlled Claude Code configuration. Fork it, customize it, sync it across machines.
 
-## Quick Start
+## How It Works
 
-### Forking (Recommended)
+This repo symlinks into `~/.claude/`, so your Claude Code configuration lives in a git repo you control.
 
-1. **Fork this repo** on GitHub
-2. **Clone your fork:**
+```
+~/.claude/
+├── skills/   → ~/Code/claude-code-setup/skills/
+├── commands/ → ~/Code/claude-code-setup/commands/
+├── agents/   → ~/Code/claude-code-setup/agents/
+├── hooks/    → ~/Code/claude-code-setup/hooks/
+└── scripts/  → ~/Code/claude-code-setup/scripts/
+```
+
+Edit files in either location — they're the same files. Commit and push to sync across machines.
+
+## Setup
+
+### Fork and Clone (Recommended)
+
+1. Fork this repo on GitHub
+2. Clone and run setup:
    ```bash
    git clone https://github.com/YOUR_USERNAME/claude-code-setup.git ~/Code/claude-code-setup
    cd ~/Code/claude-code-setup
    ./setup.sh
    ```
-3. **Make it yours** — see [FORKING.md](FORKING.md) for customization guide
+3. Customize — see [FORKING.md](FORKING.md)
 
-### Direct Clone (For Personal Use)
+### Direct Clone
 
 ```bash
 git clone https://github.com/petekp/claude-code-setup.git ~/Code/claude-code-setup
 cd ~/Code/claude-code-setup
 ./setup.sh
 ```
+
+## Syncing Changes
+
+```bash
+cd ~/Code/claude-code-setup
+git add -A && git commit -m "Update config" && git push
+```
+
+On another machine, just `git pull`.
+
+## Undo
+
+```bash
+./setup.sh --undo
+```
+
+Removes symlinks and restores any backed-up directories.
 
 ## What's Included
 
@@ -51,6 +83,8 @@ cd ~/Code/claude-code-setup
 |---------|---------|
 | `/commit-and-push` | Generate conventional commit and push to remote |
 | `/interview` | Gather context for planning with suggested answers |
+| `/new-project` | Create project from template (example of project-specific command) |
+| `/record-todos` | Capture ideas to TODO.md without acting on them |
 | `/squad` | Deploy multiple skills on a single request |
 | `/synthesize-feedback` | Consolidate feedback from multiple LLMs |
 | `/verify` | Run lint and typecheck before committing |
@@ -67,65 +101,16 @@ cd ~/Code/claude-code-setup
 |------|---------|
 | `pre-commit-verify` | Reminder to verify before committing |
 
-## How It Works
+## Reference Files (Not Symlinked)
 
-Running `./setup.sh` creates symlinks:
+These files are for reference or manual setup:
 
-| Source | Target | Method |
-|--------|--------|--------|
-| `skills/` | `~/.claude/skills` | symlink |
-| `commands/` | `~/.claude/commands` | symlink |
-| `agents/` | `~/.claude/agents` | symlink |
-| `hooks/` | `~/.claude/hooks` | symlink |
-| `statusline-command.sh` | `~/.claude/statusline-command.sh` | copy |
-
-Edits in either location update the same files. Just commit and push to sync.
-
-## Customizing
-
-After forking, see [FORKING.md](FORKING.md) for how to:
-
-- Edit `CLAUDE.md` with your coding conventions
-- Add/remove skills and commands
-- Update the `/squad` catalog
-- Handle permissions
-
-## Reference Files
-
-These files are **not symlinked** — they're for reference or manual setup:
-
-| File | Purpose | Action |
-|------|---------|--------|
-| `settings.example.json` | Example permissions config | Review for patterns, don't copy directly |
-| `templates/settings.local.json.template` | Machine-specific permissions | Copy to `~/.claude/` and edit |
-| `templates/.mcp.json.template` | MCP server config | Copy to `~/.claude/` and edit |
-| `CLAUDE.md` | Coding conventions | Edit to match your style |
-
-### Why settings.example.json?
-
-The example settings file contains:
-- Hardcoded paths specific to the original author
-- Plugin preferences that may not match yours
-- Permission patterns you might want to adopt
-
-**Don't copy it directly.** Instead, review it for patterns and build your own permissions through normal Claude Code usage.
-
-## Syncing Changes
-
-Since everything is symlinked:
-
-```bash
-cd ~/Code/claude-code-setup
-git add -A && git commit -m "Update config" && git push
-```
-
-## Undo
-
-```bash
-./setup.sh --undo
-```
-
-This removes symlinks and restores any backed-up directories.
+| File | Purpose |
+|------|---------|
+| `settings.example.json` | Example permissions — review for patterns, don't copy directly |
+| `templates/settings.local.json.template` | Machine-specific permissions template |
+| `templates/.mcp.json.template` | MCP server config template |
+| `CLAUDE.md` | Coding conventions — edit to match your style |
 
 ## License
 
