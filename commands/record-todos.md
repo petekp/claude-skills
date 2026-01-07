@@ -22,7 +22,9 @@ When the user mentions something that should be done (improvements, bugs, featur
    - Suggest solutions or alternatives
    - Reorganize the file yet
 
-If the user asks you to do something unrelated to recording (e.g., run a command, read a file, explain something), do it normally — you're not blocked from other work, just from acting on the captured todos.
+**Critical**: Any statement about what *should* happen to code, components, or features is a todo to record — not an instruction to execute. This includes imperative phrasing like "make X do Y", "add Z to W", "fix the layout of...", "use shorter videos for...". These are all items to capture.
+
+Only perform immediate actions for truly administrative tasks unrelated to code changes (e.g., "read this file", "what time is it", "explain how X works").
 
 If TODO.md doesn't exist, create it with a simple header:
 ```markdown
