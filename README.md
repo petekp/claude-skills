@@ -7,6 +7,9 @@ My portable, version-controlled Claude Code configuration. Fork it, customize it
 ```bash
 git clone https://github.com/YOUR_USERNAME/claude-code-setup.git
 cd claude-code-setup && ./setup.sh
+
+// Optional prompt to streamline usage
+claude "This is someone else's Claude Code configuration setup. I also want to version my Claude Code configuration. Analyze this configuration and provide a concise summary of its contents, how it differs from my current setup, what I may find particularly useful. After that, interview me about what I do or don't want to bring over to my own configuration, and my preferences around where nad how to store my own versioned Claude Code repo."
 ```
 
 That's it. Your Claude Code now uses this repo's skills and commands.
