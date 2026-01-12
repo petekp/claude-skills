@@ -1,0 +1,13 @@
+#!/bin/bash
+# HUD Claude Daemon - uses --output-format stream-json for precise state tracking
+# This is for programmatic use or testing, not interactive TUI
+
+DAEMON_PATH="/Users/petepetrash/Code/claude-hud/apps/daemon/dist/cli/index.js"
+
+if [ -f "$DAEMON_PATH" ]; then
+    exec node "$DAEMON_PATH" "$@"
+else
+    echo "Daemon not found at $DAEMON_PATH"
+    echo "Build it with: cd /Users/petepetrash/Code/claude-hud/apps/daemon && npm run build"
+    exit 1
+fi

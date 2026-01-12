@@ -1,0 +1,6 @@
+#!/bin/bash
+# HUD Claude - Claude Code with state tracking via hooks
+# For JSON stream mode (daemon), run: hud-claude-daemon
+# This script runs regular Claude with hooks for state tracking
+
+exec /opt/homebrew/bin/claude "$@"
