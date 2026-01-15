@@ -71,7 +71,7 @@ The plan format should fit the context. Consider including sections like:
 - Open questions
 - Next steps or milestones
 
-Ask the user where they want the plan saved before writing it.
+Save the plan to `.claude/plans/` (create the directory if needed). Use a descriptive filename like `feature-name-plan.md`. Only ask about location if the user has a specific preference.
 
 ## Tone
 
