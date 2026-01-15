@@ -1,0 +1,315 @@
+{
+  "permissions": {
+    "allow": [
+      "Edit",
+      "Search",
+      "WebSearch",
+      "Write",
+      "Bash(./scripts/sync-workbench.sh *)",
+      "Bash(./setup.sh *)",
+      "Bash(~/.claude/scripts/*)",
+      "Bash(agent-browser *)",
+      "Bash(app/components/home/chat-showcase.tsx )",
+      "Bash(app/docs/[component]/page.tsx )",
+      "Bash(app/docs/[component]/previews/*.tsx)",
+      "Bash(app/docs/_components/code-panel.tsx )",
+      "Bash(app/docs/_components/preset-selector.tsx )",
+      "Bash(app/docs/gallery/page.tsx )",
+      "Bash(cat *)",
+      "Bash(cd *)",
+      "Bash(cd * && swift build)",
+      "Bash(cd * && swift build *)",
+      "Bash(cd * && swift run)",
+      "Bash(cd * && swift run *)",
+      "Bash(chmod *)",
+      "Bash(claude plugin *)",
+      "Bash(claude skill --help *)",
+      "Bash(claude skills --help *)",
+      "Bash(components/tool-ui/data-table/data-table.tsx )",
+      "Bash(components/tool-ui/data-table/types.ts )",
+      "Bash(components/tool-ui/media-card/context.tsx )",
+      "Bash(components/tool-ui/media-card/footer.tsx )",
+      "Bash(components/tool-ui/media-card/media-actions.tsx )",
+      "Bash(components/tool-ui/media-card/media-card.tsx )",
+      "Bash(components/tool-ui/option-list/*.tsx)",
+      "Bash(components/tool-ui/shared/*.tsx)",
+      "Bash(components/tool-ui/social-post/context.tsx )",
+      "Bash(components/tool-ui/social-post/post-actions.tsx )",
+      "Bash(components/tool-ui/social-post/social-post.tsx )",
+      "Bash(curl *)",
+      "Bash(do)",
+      "Bash(do git mv \"$item\" app/components/)",
+      "Bash(do git mv \"$f\" app/workbench/lib/)",
+      "Bash(do git mv \"$f\" app/workbench/components/)",
+      "Bash(do if ! grep -q \"PresetExample\" \"$f\")",
+      "Bash(done)",
+      "Bash(echo *)",
+      "Bash(else)",
+      "Bash(env)",
+      "Bash(env NODE_ENV=production pnpm run build)",
+      "Bash(fi *)",
+      "Bash(fi)",
+      "Bash(find *)",
+      "Bash(for dir in chart code-block data-table instagram-post linkedin-post media-card option-list plan poi-map shared terminal x-post)",
+      "Bash(for f in lib/workbench/*)",
+      "Bash(for f in app/components/workbench/*)",
+      "Bash(for id in chart code-block data-table media-card option-list plan social-post terminal)",
+      "Bash(for item in app/components/components-preview/*)",
+      "Bash(gh *)",
+      "Bash(git *)",
+      "Bash(grep *)",
+      "Bash(jq *)",
+      "Bash(lib/docs/component-registry.ts )",
+      "Bash(lib/presets/option-list.ts )",
+      "Bash(lsof *)",
+      "Bash(ls *)",
+      "Bash(mkdir *)",
+      "Bash(node -e *)",
+      "Bash(node scripts/transform-shadcn-styles.mjs *)",
+      "Bash(NODE_ENV=production pnpm build *)",
+      "Bash(NODE_ENV=production pnpm run build *)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(pbcopy *)",
+      "Bash(pgrep *)",
+      "Bash(pkill *)",
+      "Bash(pnpm *)",
+      "Bash(sqlite3 *)",
+      "Bash(swift build *)",
+      "Bash(swift run *)",
+      "Bash(then)",
+      "Bash(then echo \"$f\")",
+      "Bash(timeout 15 pnpm dev *)",
+      "Bash(timeout 20 pnpm dev *)",
+      "Bash(tree *)",
+      "Bash(vercel --prod *)",
+      "Bash(vercel --version *)",
+      "Bash(vercel domains ls *)",
+      "Bash(vercel inspect *)",
+      "Bash(vercel link *)",
+      "Bash(vercel list *)",
+      "Bash(vercel teams ls *)",
+      "Bash(vercel whoami *)",
+      "Bash(wc *)",
+      "Bash(while read f)",
+      "Bash(xargs *)",
+      "Bash(yes *)",
+      "mcp__context7__get-library-docs",
+      "mcp__context7__query-docs",
+      "mcp__context7__resolve-library-id",
+      "mcp__ide__getDiagnostics",
+      "Skill",
+      "WebFetch(domain:alistapart.com)",
+      "WebFetch(domain:ant.design)",
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:ariakit.org)",
+      "WebFetch(domain:blog.datawrapper.de)",
+      "WebFetch(domain:blog.maximeheckel.com)",
+      "WebFetch(domain:blog.sethcorker.com)",
+      "WebFetch(domain:bugzilla.mozilla.org)",
+      "WebFetch(domain:developer.chrome.com)",
+      "WebFetch(domain:developers.openai.com)",
+      "WebFetch(domain:dev.to)",
+      "WebFetch(domain:docs.langchain.com)",
+      "WebFetch(domain:fumadocs.dev)",
+      "WebFetch(domain:fumadocs.vercel.app)",
+      "WebFetch(domain:gist.github.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:horizon.servicenow.com)",
+      "WebFetch(domain:issues.chromium.org)",
+      "WebFetch(domain:issuetracker.google.com)",
+      "WebFetch(domain:itunes.apple.com)",
+      "WebFetch(domain:medium.com)",
+      "WebFetch(domain:motion.dev)",
+      "WebFetch(domain:mui.com)",
+      "WebFetch(domain:nolanlawson.com)",
+      "WebFetch(domain:practicaltypography.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:react-resizable-panels.vercel.app)",
+      "WebFetch(domain:shiki.style)",
+      "WebFetch(domain:sinja.io)",
+      "WebFetch(domain:stackoverflow.com)",
+      "WebFetch(domain:stronglytyped.uk)",
+      "WebFetch(domain:tailgraph.com)",
+      "WebFetch(domain:tanstack.com)",
+      "WebFetch(domain:theme-toggle.rdsx.dev)",
+      "WebFetch(domain:ui.shadcn.com)",
+      "WebFetch(domain:v6.carbondesignsystem.com)",
+      "WebFetch(domain:web.dev)",
+      "WebFetch(domain:www.assistant-ui.com)",
+      "WebFetch(domain:www.datawrapper.de)",
+      "WebFetch(domain:www.duetds.com)",
+      "WebFetch(domain:www.filamentgroup.com)",
+      "WebFetch(domain:www.imcorfitz.com)",
+      "WebFetch(domain:www.joshwcomeau.com)",
+      "WebFetch(domain:www.nicchan.me)",
+      "WebFetch(domain:www.nikolailehbr.ink)",
+      "WebFetch(domain:www.quantamagazine.org)",
+      "WebFetch(domain:www.radix-ui.com)",
+      "WebFetch(domain:www.tool-ui.com)",
+      "WebFetch(domain:www.tremor.so)",
+      "WebFetch(domain:www.uxmatters.com)",
+      "WebFetch(domain:vtbag.dev)"
+    ],
+    "deny": [
+      "**/.env*",
+      "**/*.env",
+      "**/secrets/**",
+      "**/*secret*",
+      "**/*credentials*",
+      "**/node_modules/**",
+      "**/.next/**",
+      "**/dist/**",
+      "**/build/**",
+      "**/*.log"
+    ],
+    "ask": [],
+    "defaultMode": "acceptEdits",
+    "additionalDirectories": [
+      "/Users/petepetrash/Dropbox/Screenshots",
+      "~/.claude/skills",
+      "~/Code"
+    ],
+    "respectGitignore": true
+  },
+  "model": "opus",
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "idle_prompt",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/hud-state-tracker.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/publish-state.sh"
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/hud-state-tracker.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/hud-state-tracker.sh"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "auto",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/hud-state-tracker.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/publish-state.sh"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/hud-state-tracker.sh"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/hud-state-tracker.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/publish-state.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/hud-state-tracker.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/publish-state.sh"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/hud-state-tracker.sh"
+          },
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/publish-state.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "agent-sdk-dev@claude-code-plugins": false,
+    "code-review@claude-code-plugins": false,
+    "commit-commands@claude-plugins-official": true,
+    "context7@claude-plugins-official": true,
+    "explanatory-output-style@claude-code-plugins": false,
+    "feature-dev@claude-code-plugins": true,
+    "frontend-design@claude-code-plugins": true,
+    "github@claude-plugins-official": false,
+    "plugin-dev@claude-plugins-official": true,
+    "pr-review-toolkit@claude-code-plugins": true,
+    "ralph-wiggum@claude-code-plugins": false,
+    "ralph-wiggum@claude-plugins-official": false,
+    "rust-analyzer-lsp@claude-plugins-official": true,
+    "safety-net@cc-marketplace": true,
+    "supabase@claude-plugins-official": true,
+    "swift-lsp@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "vercel@claude-plugins-official": true,
+    "ralph-loop@claude-plugins-official": true,
+    "plan-export@cc-marketplace": true,
+    "playwright@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "review-package@local": true,
+    "superpowers@claude-plugins-official": true,
+    "agent-sdk-dev@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "security-guidance@claude-plugins-official": true
+  },
+  "alwaysThinkingEnabled": true,
+  "feedbackSurveyState": {
+    "lastShownTime": 1753981396935
+  }
+}

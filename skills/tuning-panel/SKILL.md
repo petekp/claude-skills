@@ -85,35 +85,127 @@ Consult `references/platform-libraries.md` for detailed implementation patterns.
 
 ### Step 4: Add LLM Export Functionality
 
-Include a mechanism to export current values in a format optimized for pasting to an LLM:
+**CRITICAL:** The export functionality must properly track and display only the values that have actually been changed from defaults. This is essential for users to see what they've tuned.
+
+#### Implementation Requirements
+
+1. **Store defaults at component level** - Define a `defaults` object before `useControls()`
+2. **Use proper comparison** - Handle floating point numbers with tolerance (e.g., 0.001)
+3. **Filter changed values only** - Don't show "X → X" for unchanged values
+4. **Format clearly** - Make parameter names human-readable
+
+#### Correct Implementation Pattern
 
 ```tsx
-const exportForLLM = () => {
-  const formatted = `
-## Current Tuning Values
+export default function TunableComponent() {
+  // CRITICAL: Store defaults at component level for comparison
+  const defaults = {
+    duration: 300,
+    delay: 0,
+    stiffness: 100,
+    damping: 10,
+    opacity: 1.0,
+  };
+
+  const config = useControls({
+    animation: folder({
+      duration: { value: 300, min: 0, max: 2000, step: 10 },
+      delay: { value: 0, min: 0, max: 1000, step: 10 },
+    }),
+    physics: folder({
+      stiffness: { value: 100, min: 0, max: 300, step: 1 },
+      damping: { value: 10, min: 0, max: 100, step: 1 },
+    }),
+    visual: folder({
+      opacity: { value: 1.0, min: 0, max: 1, step: 0.01 },
+    }),
+
+    'Export for LLM': button(() => {
+      const formatted = `## Tuned Parameters
 
 Apply these values to the component:
 
-\`\`\`
-${Object.entries(values)
-  .map(([key, val]) => `${key}: ${JSON.stringify(val)}`)
+\`\`\`typescript
+const config = {
+${Object.entries(config)
+  .filter(([key]) => key !== 'Export for LLM')
+  .map(([key, val]) => `  ${key}: ${JSON.stringify(val)},`)
   .join('\n')}
+};
 \`\`\`
 
-These values were tuned from the defaults:
-${Object.entries(values)
-  .filter(([key, val]) => val !== defaults[key])
-  .map(([key, val]) => `- ${key}: ${defaults[key]} → ${val}`)
-  .join('\n')}
+### Changes from Defaults
+${Object.entries(config)
+  .filter(([key, val]) => {
+    const defaultVal = defaults[key as keyof typeof defaults];
+    if (defaultVal === undefined) return false;
+    // Use tolerance for floating point comparison
+    const numVal = Number(val);
+    const numDefault = Number(defaultVal);
+    if (!isNaN(numVal) && !isNaN(numDefault)) {
+      return Math.abs(numVal - numDefault) > 0.001;
+    }
+    return val !== defaultVal;
+  })
+  .map(([key, val]) => {
+    const defaultVal = defaults[key as keyof typeof defaults];
+    // Convert camelCase to Title Case for display
+    const displayKey = key.replace(/([A-Z])/g, ' $1')
+      .replace(/^./, str => str.toUpperCase());
+    const formattedDefault = typeof defaultVal === 'number'
+      ? defaultVal.toFixed(2) : defaultVal;
+    const formattedVal = typeof val === 'number'
+      ? val.toFixed(2) : val;
+    return `- ${displayKey}: ${formattedDefault} → ${formattedVal}`;
+  })
+  .join('\n') || '(No changes from defaults)'}
 `;
-  navigator.clipboard.writeText(formatted);
-};
+      navigator.clipboard.writeText(formatted);
+      alert('Tuned parameters copied to clipboard!');
+    }),
+  });
+
+  return <Component {...config} />;
+}
+```
+
+#### Common Mistakes to Avoid
+
+❌ **DON'T hardcode defaults in the export string:**
+```tsx
+// BAD - Shows "Default: 300 → ${config.duration}" even if unchanged
+`- Duration: 300 → ${config.duration}`
+```
+
+❌ **DON'T use strict equality for numbers:**
+```tsx
+// BAD - Floating point comparison may fail
+.filter(([key, val]) => val !== defaults[key])
+```
+
+❌ **DON'T forget to store defaults:**
+```tsx
+// BAD - No defaults object to compare against
+const config = useControls({
+  duration: { value: 300, min: 0, max: 2000 },
+});
+```
+
+✅ **DO store defaults and filter properly:**
+```tsx
+// GOOD - Proper defaults tracking and comparison
+const defaults = { duration: 300, delay: 0 };
+const config = useControls({ /* ... */ });
+const changed = Object.entries(config).filter(([k, v]) =>
+  Math.abs(Number(v) - Number(defaults[k])) > 0.001
+);
 ```
 
 The export should include:
 - All current values in a code-ready format
-- A diff showing what changed from defaults
+- **Only changed values** in the diff section (critical!)
 - Context about what was being tuned
+- Human-readable parameter names
 
 ## Parameter Discovery Strategies
 

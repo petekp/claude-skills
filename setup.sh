@@ -3,11 +3,12 @@
 # Sets up symlinks from ~/.claude to this repository.
 #
 # What this does:
-#   ~/.claude/skills   → repo/skills
-#   ~/.claude/commands → repo/commands
-#   ~/.claude/agents   → repo/agents
-#   ~/.claude/hooks    → repo/hooks
-#   ~/.claude/scripts  → repo/scripts
+#   ~/.claude/skills       → repo/skills
+#   ~/.claude/commands     → repo/commands
+#   ~/.claude/agents       → repo/agents
+#   ~/.claude/hooks        → repo/hooks
+#   ~/.claude/scripts      → repo/scripts
+#   ~/.claude/settings.json → repo/settings.json
 #   ~/.claude/statusline-command.sh ← repo/statusline-command.sh (copied)
 #
 # After running this, edits in either location are the same file.
@@ -46,6 +47,8 @@ REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 CLAUDE_DIR="$HOME/.claude"
 
 DIRS_TO_LINK=(skills commands agents hooks scripts)
+
+FILES_TO_LINK=(settings.json)
 
 FILES_TO_COPY=(statusline-command.sh)
 
@@ -98,6 +101,64 @@ unlink_dir() {
         echo "  ✓  Removed symlink: $name"
 
         local latest_backup=$(ls -1d "$target".backup.* 2>/dev/null | tail -1)
+        if [[ -n "$latest_backup" ]]; then
+            mv "$latest_backup" "$target"
+            echo "      Restored from: $(basename "$latest_backup")"
+        fi
+    else
+        echo "  ⏭  $name (not a symlink, skipping)"
+    fi
+}
+
+link_file() {
+    local name=$1
+    local source="$REPO_DIR/$name"
+    local target="$CLAUDE_DIR/$name"
+
+    if [[ ! -f "$source" ]]; then
+        echo "  ⏭  $name (not in repo, skipping)"
+        return
+    fi
+
+    if [[ -L "$target" ]]; then
+        local current_target=$(readlink "$target")
+        if [[ "$current_target" == "$source" ]]; then
+            echo "  ✓  $name (already linked)"
+            return
+        else
+            echo "  ⚠  $name is symlinked elsewhere: $current_target"
+            echo "      Remove manually if you want to relink"
+            return
+        fi
+    fi
+
+    if [[ -f "$target" ]]; then
+        local backup="$target.backup.$(date +%Y%m%d-%H%M%S)"
+        if $DRY_RUN; then
+            echo "  [dry-run] Would backup $name → $backup"
+        else
+            echo "  📦 Backing up $name → $backup"
+            mv "$target" "$backup"
+        fi
+    fi
+
+    if $DRY_RUN; then
+        echo "  [dry-run] Would link: $name → $source"
+    else
+        ln -s "$source" "$target"
+        echo "  ✓  $name → $source"
+    fi
+}
+
+unlink_file() {
+    local name=$1
+    local target="$CLAUDE_DIR/$name"
+
+    if [[ -L "$target" ]]; then
+        rm "$target"
+        echo "  ✓  Removed symlink: $name"
+
+        local latest_backup=$(ls -1 "$target".backup.* 2>/dev/null | tail -1)
         if [[ -n "$latest_backup" ]]; then
             mv "$latest_backup" "$target"
             echo "      Restored from: $(basename "$latest_backup")"
@@ -167,7 +228,12 @@ if [[ "$1" == "--undo" ]]; then
         unlink_dir "$dir"
     done
     echo ""
-    echo "Files:"
+    echo "Symlinked files:"
+    for file in "${FILES_TO_LINK[@]}"; do
+        unlink_file "$file"
+    done
+    echo ""
+    echo "Copied files:"
     for file in "${FILES_TO_COPY[@]}"; do
         remove_file "$file"
     done
@@ -181,6 +247,11 @@ else
     echo "Symlinking directories:"
     for dir in "${DIRS_TO_LINK[@]}"; do
         link_dir "$dir"
+    done
+    echo ""
+    echo "Symlinking files:"
+    for file in "${FILES_TO_LINK[@]}"; do
+        link_file "$file"
     done
     echo ""
     echo "Copying files:"
