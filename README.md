@@ -36,7 +36,7 @@ Edit files in either location — they're the same files. Commit and push to syn
 1. Fork this repo on GitHub
 2. Clone and run setup:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/claude-code-setup.git
+   git clone https://github.com/petekp/claude-code-setup.git
    cd claude-code-setup && ./setup.sh
    ```
 3. Customize — see [FORKING.md](FORKING.md)
