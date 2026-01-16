@@ -5,7 +5,7 @@ My portable, version-controlled Claude Code configuration. Fork it, customize it
 ## Quick Start
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/claude-code-setup.git
+git clone https://github.com/petekp/claude-code-setup.git
 cd claude-code-setup && ./setup.sh
 
 // Optional prompt to streamline usage
