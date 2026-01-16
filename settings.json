@@ -198,7 +198,8 @@
       "Skill(unix-macos-engineer)",
       "Skill(plugin-dev:skill-development)",
       "Bash(claude /doctor)",
-      "Bash(claude doctor)"
+      "Bash(claude doctor)",
+      "Bash(/opt/homebrew/bin/claude *)"
     ],
     "deny": [
       "**/.env*",
