@@ -10,6 +10,7 @@
 #   ~/.claude/scripts      → repo/scripts
 #   ~/.claude/settings.json → repo/settings.json
 #   ~/.claude/statusline-command.sh ← repo/statusline-command.sh (copied)
+#   ~/.mcp.json            → repo/.mcp.json
 #
 # After running this, edits in either location are the same file.
 # Commit and push from this repo as usual.
@@ -51,6 +52,8 @@ DIRS_TO_LINK=(skills commands agents hooks scripts)
 FILES_TO_LINK=(settings.json)
 
 FILES_TO_COPY=(statusline-command.sh)
+
+HOME_FILES_TO_LINK=(.mcp.json)
 
 link_dir() {
     local name=$1
@@ -220,6 +223,64 @@ remove_file() {
     fi
 }
 
+link_home_file() {
+    local name=$1
+    local source="$REPO_DIR/$name"
+    local target="$HOME/$name"
+
+    if [[ ! -f "$source" ]]; then
+        echo "  ⏭  $name (not in repo, skipping)"
+        return
+    fi
+
+    if [[ -L "$target" ]]; then
+        local current_target=$(readlink "$target")
+        if [[ "$current_target" == "$source" ]]; then
+            echo "  ✓  $name (already linked)"
+            return
+        else
+            echo "  ⚠  $name is symlinked elsewhere: $current_target"
+            echo "      Remove manually if you want to relink"
+            return
+        fi
+    fi
+
+    if [[ -f "$target" ]]; then
+        local backup="$target.backup.$(date +%Y%m%d-%H%M%S)"
+        if $DRY_RUN; then
+            echo "  [dry-run] Would backup $name → $backup"
+        else
+            echo "  📦 Backing up $name → $backup"
+            mv "$target" "$backup"
+        fi
+    fi
+
+    if $DRY_RUN; then
+        echo "  [dry-run] Would link: $name → $source"
+    else
+        ln -s "$source" "$target"
+        echo "  ✓  $name → $source"
+    fi
+}
+
+unlink_home_file() {
+    local name=$1
+    local target="$HOME/$name"
+
+    if [[ -L "$target" ]]; then
+        rm "$target"
+        echo "  ✓  Removed symlink: $name"
+
+        local latest_backup=$(ls -1 "$target".backup.* 2>/dev/null | tail -1)
+        if [[ -n "$latest_backup" ]]; then
+            mv "$latest_backup" "$target"
+            echo "      Restored from: $(basename "$latest_backup")"
+        fi
+    else
+        echo "  ⏭  $name (not a symlink, skipping)"
+    fi
+}
+
 if [[ "$1" == "--undo" ]]; then
     echo "Removing symlinks and restoring backups..."
     echo ""
@@ -236,6 +297,11 @@ if [[ "$1" == "--undo" ]]; then
     echo "Copied files:"
     for file in "${FILES_TO_COPY[@]}"; do
         remove_file "$file"
+    done
+    echo ""
+    echo "Home directory files:"
+    for file in "${HOME_FILES_TO_LINK[@]}"; do
+        unlink_home_file "$file"
     done
 else
     if $DRY_RUN; then
@@ -257,6 +323,11 @@ else
     echo "Copying files:"
     for file in "${FILES_TO_COPY[@]}"; do
         copy_file "$file"
+    done
+    echo ""
+    echo "Symlinking home directory files:"
+    for file in "${HOME_FILES_TO_LINK[@]}"; do
+        link_home_file "$file"
     done
     echo ""
     if $DRY_RUN; then
