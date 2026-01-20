@@ -115,6 +115,7 @@ Removes symlinks and restores any backed-up directories.
 
 | Hook                | Purpose                                                   |
 | ------------------- | --------------------------------------------------------- |
+| `changelog-update`  | Prompt to update CHANGELOG.md before committing           |
 | `doc-update-check`  | Prompt to update README when commands/skills/hooks change |
 | `pre-commit-verify` | Reminder to verify before committing                      |
 | `say-ready`         | Speak project name when Claude is ready for input         |
