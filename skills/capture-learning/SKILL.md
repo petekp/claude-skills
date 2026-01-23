@@ -1,20 +1,11 @@
 ---
 name: capture-learning
-description: This skill should be used when the user asks to "capture this learning", "update the docs with this", "remember this for next time", "document this issue", "add this to CLAUDE.md", "save this knowledge", "update project knowledge", or when the user has just resolved an issue and wants to prevent it from happening again. Analyzes recent session context and updates either project knowledge files (for project-specific learnings) or skills/commands/subagents (for general learnings that apply across projects).
+description: Analyze recent conversation context and capture learnings to project knowledge files (for project-specific insights) or skills/commands/subagents (for cross-project patterns). Use when the user asks to "capture this learning", "update the docs with this", "remember this for next time", "document this issue", "add this to CLAUDE.md", "save this knowledge", or "update project knowledge". Also triggers after resolving build/setup issues, discovering non-obvious patterns, or completing debugging sessions with valuable insights.
 ---
 
 # Capture Learning
 
 Analyze recent conversation context and capture learnings—either to project knowledge files or to skills/commands/subagents for cross-project reuse.
-
-## When to Use
-
-Invoke this skill when:
-- A build, setup, or environment issue has been resolved
-- A non-obvious pattern or convention has been discovered
-- A debugging session revealed important insights
-- The user explicitly asks to capture or document something
-- Any knowledge worth preserving for future sessions emerges
 
 ## Core Workflow
 
@@ -335,4 +326,4 @@ If a learning involves secrets, document the *pattern* without the actual values
 
 ### Reference Files
 
-- **`references/section-templates.md`** - Complete templates for common documentation sections (Troubleshooting, Build & Setup, Environment, Patterns, Known Issues, Debugging). Consult when creating new sections or structuring complex learnings.
+- **[references/section-templates.md](references/section-templates.md)** - Complete templates for common documentation sections (Troubleshooting, Build & Setup, Environment, Patterns, Known Issues, Debugging). Consult when creating new sections or structuring complex learnings.

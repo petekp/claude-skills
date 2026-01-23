@@ -84,3 +84,12 @@ plutil -lint com.example.agent.plist
 - Note when `sudo` or SIP disable is required
 - Distinguish macOS-specific from POSIX-portable solutions
 
+## Reference Guides
+
+Load the relevant reference when working in that domain:
+
+| Domain | Reference | Contents |
+|--------|-----------|----------|
+| **launchd** | [references/launchd-patterns.md](references/launchd-patterns.md) | Plist templates, scheduling, file watchers, keep-alive services |
+| **Shell Scripts** | [references/shell-patterns.md](references/shell-patterns.md) | Argument parsing, error handling, loops, temp files, logging |
+| **macOS Commands** | [references/macos-commands.md](references/macos-commands.md) | defaults, mdfind, open, pbcopy, security, Homebrew |

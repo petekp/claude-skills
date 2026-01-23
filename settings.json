@@ -1,17 +1,93 @@
 {
-  "permissions": {
-    "allow": [
+  "alwaysThinkingEnabled" : true,
+  "autoUpdatesChannel" : "stable",
+  "enabledPlugins" : {
+    "agent-sdk-dev@claude-plugins-official" : true,
+    "code-review@claude-plugins-official" : true,
+    "code-simplifier@claude-plugins-official" : true,
+    "commit-commands@claude-plugins-official" : true,
+    "context7@claude-plugins-official" : true,
+    "frontend-design@claude-plugins-official" : true,
+    "github@claude-plugins-official" : false,
+    "plan-export@cc-marketplace" : true,
+    "playwright@claude-plugins-official" : true,
+    "plugin-dev@claude-plugins-official" : true,
+    "ralph-loop@claude-plugins-official" : true,
+    "rust-analyzer-lsp@claude-plugins-official" : true,
+    "safety-net@cc-marketplace" : true,
+    "security-guidance@claude-plugins-official" : true,
+    "supabase@claude-plugins-official" : true,
+    "superpowers@claude-plugins-official" : true,
+    "swift-lsp@claude-plugins-official" : true,
+    "typescript-lsp@claude-plugins-official" : true,
+    "vercel@claude-plugins-official" : true
+  },
+  "feedbackSurveyState" : {
+    "lastShownTime" : 1753981396935
+  },
+  "hooks" : {
+    "SessionEnd" : [
+      {
+        "command" : "~\/.claude\/scripts\/hud-state-tracker.sh SessionEnd",
+        "type" : "command"
+      },
+      {
+        "hooks" : [
+          {
+            "command" : "~\/.claude\/scripts\/hud-state-tracker.sh $CLAUDE_EVENT",
+            "type" : "command"
+          }
+        ],
+        "matcher" : ""
+      }
+    ],
+    "SessionStart" : [
+      {
+        "command" : "~\/.claude\/scripts\/hud-state-tracker.sh SessionStart",
+        "type" : "command"
+      },
+      {
+        "hooks" : [
+          {
+            "command" : "~\/.claude\/scripts\/hud-state-tracker.sh $CLAUDE_EVENT",
+            "type" : "command"
+          }
+        ],
+        "matcher" : ""
+      }
+    ],
+    "Stop" : [
+      {
+        "hooks" : [
+          {
+            "command" : "~\/.claude\/scripts\/hud-state-tracker.sh $CLAUDE_EVENT",
+            "type" : "command"
+          }
+        ],
+        "matcher" : ""
+      }
+    ]
+  },
+  "minimumVersion" : "2.1.9",
+  "model" : "opus",
+  "permissions" : {
+    "additionalDirectories" : [
+      "\/Users\/petepetrash\/Dropbox\/Screenshots",
+      "~\/.claude\/skills",
+      "~\/Code"
+    ],
+    "allow" : [
       "Edit",
       "Search",
       "WebSearch",
       "Write",
-      "Bash(./scripts/sync-workbench.sh *)",
-      "Bash(./setup.sh *)",
-      "Bash(~/.claude/scripts/*)",
+      "Bash(.\/scripts\/sync-workbench.sh *)",
+      "Bash(.\/setup.sh *)",
+      "Bash(~\/.claude\/scripts\/*)",
       "Bash(agent-browser *)",
       "Bash(agent-browser * && *)",
       "Bash(agent-browser *; *)",
-      "Bash(agent-browser * 2>/dev/null*)",
+      "Bash(agent-browser * 2>\/dev\/null*)",
       "Bash(AGENT_BROWSER_SESSION=* agent-browser *)",
       "Bash(AGENT_BROWSER_SESSION=* agent-browser close)",
       "Bash(AGENT_BROWSER_SESSION=* agent-browser open *)",
@@ -24,15 +100,15 @@
       "Bash(AGENT_BROWSER_SESSION=* agent-browser wait *)",
       "Bash(AGENT_BROWSER_SESSION=* agent-browser * && *)",
       "Bash(AGENT_BROWSER_SESSION=* agent-browser *; *)",
-      "Bash(AGENT_BROWSER_SESSION=* agent-browser * 2>/dev/null*)",
+      "Bash(AGENT_BROWSER_SESSION=* agent-browser * 2>\/dev\/null*)",
       "Bash(sleep *)",
       "Bash(sleep)",
-      "Bash(app/components/home/chat-showcase.tsx )",
-      "Bash(app/docs/[component]/page.tsx )",
-      "Bash(app/docs/[component]/previews/*.tsx)",
-      "Bash(app/docs/_components/code-panel.tsx )",
-      "Bash(app/docs/_components/preset-selector.tsx )",
-      "Bash(app/docs/gallery/page.tsx )",
+      "Bash(app\/components\/home\/chat-showcase.tsx )",
+      "Bash(app\/docs\/[component]\/page.tsx )",
+      "Bash(app\/docs\/[component]\/previews\/*.tsx)",
+      "Bash(app\/docs\/_components\/code-panel.tsx )",
+      "Bash(app\/docs\/_components\/preset-selector.tsx )",
+      "Bash(app\/docs\/gallery\/page.tsx )",
       "Bash(cat *)",
       "Bash(cd *)",
       "Bash(cd * && swift build)",
@@ -43,22 +119,22 @@
       "Bash(claude plugin *)",
       "Bash(claude skill --help *)",
       "Bash(claude skills --help *)",
-      "Bash(components/tool-ui/data-table/data-table.tsx )",
-      "Bash(components/tool-ui/data-table/types.ts )",
-      "Bash(components/tool-ui/media-card/context.tsx )",
-      "Bash(components/tool-ui/media-card/footer.tsx )",
-      "Bash(components/tool-ui/media-card/media-actions.tsx )",
-      "Bash(components/tool-ui/media-card/media-card.tsx )",
-      "Bash(components/tool-ui/option-list/*.tsx)",
-      "Bash(components/tool-ui/shared/*.tsx)",
-      "Bash(components/tool-ui/social-post/context.tsx )",
-      "Bash(components/tool-ui/social-post/post-actions.tsx )",
-      "Bash(components/tool-ui/social-post/social-post.tsx )",
+      "Bash(components\/tool-ui\/data-table\/data-table.tsx )",
+      "Bash(components\/tool-ui\/data-table\/types.ts )",
+      "Bash(components\/tool-ui\/media-card\/context.tsx )",
+      "Bash(components\/tool-ui\/media-card\/footer.tsx )",
+      "Bash(components\/tool-ui\/media-card\/media-actions.tsx )",
+      "Bash(components\/tool-ui\/media-card\/media-card.tsx )",
+      "Bash(components\/tool-ui\/option-list\/*.tsx)",
+      "Bash(components\/tool-ui\/shared\/*.tsx)",
+      "Bash(components\/tool-ui\/social-post\/context.tsx )",
+      "Bash(components\/tool-ui\/social-post\/post-actions.tsx )",
+      "Bash(components\/tool-ui\/social-post\/social-post.tsx )",
       "Bash(curl *)",
       "Bash(do)",
-      "Bash(do git mv \"$item\" app/components/)",
-      "Bash(do git mv \"$f\" app/workbench/lib/)",
-      "Bash(do git mv \"$f\" app/workbench/components/)",
+      "Bash(do git mv \"$item\" app\/components\/)",
+      "Bash(do git mv \"$f\" app\/workbench\/lib\/)",
+      "Bash(do git mv \"$f\" app\/workbench\/components\/)",
       "Bash(do if ! grep -q \"PresetExample\" \"$f\")",
       "Bash(done)",
       "Bash(echo *)",
@@ -69,21 +145,21 @@
       "Bash(fi)",
       "Bash(find *)",
       "Bash(for dir in chart code-block data-table instagram-post linkedin-post media-card option-list plan poi-map shared terminal x-post)",
-      "Bash(for f in lib/workbench/*)",
-      "Bash(for f in app/components/workbench/*)",
+      "Bash(for f in lib\/workbench\/*)",
+      "Bash(for f in app\/components\/workbench\/*)",
       "Bash(for id in chart code-block data-table media-card option-list plan social-post terminal)",
-      "Bash(for item in app/components/components-preview/*)",
+      "Bash(for item in app\/components\/components-preview\/*)",
       "Bash(gh *)",
       "Bash(git *)",
       "Bash(grep *)",
       "Bash(jq *)",
-      "Bash(lib/docs/component-registry.ts )",
-      "Bash(lib/presets/option-list.ts )",
+      "Bash(lib\/docs\/component-registry.ts )",
+      "Bash(lib\/presets\/option-list.ts )",
       "Bash(lsof *)",
       "Bash(ls *)",
       "Bash(mkdir *)",
       "Bash(node -e *)",
-      "Bash(node scripts/transform-shadcn-styles.mjs *)",
+      "Bash(node scripts\/transform-shadcn-styles.mjs *)",
       "Bash(NODE_ENV=production pnpm build *)",
       "Bash(NODE_ENV=production pnpm run build *)",
       "Bash(npm *)",
@@ -178,8 +254,8 @@
       "Bash(networksetup -getsearchdomains:*)",
       "Bash(sysctl:*)",
       "Bash(sudo pfctl:*)",
-      "Bash(/usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate:*)",
-      "Bash(/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -I)",
+      "Bash(\/usr\/libexec\/ApplicationFirewall\/socketfilterfw --getglobalstate:*)",
+      "Bash(\/System\/Library\/PrivateFrameworks\/Apple80211.framework\/Versions\/Current\/Resources\/airport -I)",
       "Bash(networkQuality:*)",
       "Bash(launchctl list:*)",
       "Bash(netstat:*)",
@@ -215,163 +291,26 @@
       "Bash(test:*)",
       "Skill(unix-macos-engineer)",
       "Skill(plugin-dev:skill-development)",
-      "Bash(claude /doctor)",
+      "Bash(claude \/doctor)",
       "Bash(claude doctor)",
-      "Bash(/opt/homebrew/bin/claude *)"
+      "Bash(\/opt\/homebrew\/bin\/claude *)"
     ],
-    "deny": [
-      "**/.env*",
-      "**/*.env",
-      "**/secrets/**",
-      "**/*secret*",
-      "**/*credentials*",
-      "**/node_modules/**",
-      "**/.next/**",
-      "**/dist/**",
-      "**/build/**",
-      "**/*.log"
+    "ask" : [
+
     ],
-    "ask": [],
-    "defaultMode": "acceptEdits",
-    "additionalDirectories": [
-      "/Users/petepetrash/Dropbox/Screenshots",
-      "~/.claude/skills",
-      "~/Code"
+    "defaultMode" : "acceptEdits",
+    "deny" : [
+      "**\/.env*",
+      "**\/*.env",
+      "**\/secrets\/**",
+      "**\/*secret*",
+      "**\/*credentials*",
+      "**\/node_modules\/**",
+      "**\/.next\/**",
+      "**\/dist\/**",
+      "**\/build\/**",
+      "**\/*.log"
     ],
-    "respectGitignore": true
-  },
-  "model": "opus",
-  "hooks": {
-    "Notification": [
-      {
-        "matcher": "idle_prompt",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/scripts/hud-state-tracker.sh"
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/publish-state.sh"
-          }
-        ]
-      }
-    ],
-    "PermissionRequest": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/scripts/hud-state-tracker.sh"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/scripts/hud-state-tracker.sh"
-          }
-        ]
-      }
-    ],
-    "PreCompact": [
-      {
-        "matcher": "auto",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/scripts/hud-state-tracker.sh"
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/publish-state.sh"
-          }
-        ]
-      }
-    ],
-    "SessionEnd": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/scripts/hud-state-tracker.sh"
-          }
-        ]
-      }
-    ],
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/scripts/hud-state-tracker.sh"
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/publish-state.sh"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/scripts/hud-state-tracker.sh"
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/publish-state.sh"
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/scripts/hud-state-tracker.sh"
-          },
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/publish-state.sh"
-          }
-        ]
-      }
-    ]
-  },
-  "enabledPlugins": {
-    "commit-commands@claude-plugins-official": true,
-    "context7@claude-plugins-official": true,
-    "github@claude-plugins-official": false,
-    "plugin-dev@claude-plugins-official": true,
-    "rust-analyzer-lsp@claude-plugins-official": true,
-    "safety-net@cc-marketplace": true,
-    "supabase@claude-plugins-official": true,
-    "swift-lsp@claude-plugins-official": true,
-    "typescript-lsp@claude-plugins-official": true,
-    "vercel@claude-plugins-official": true,
-    "ralph-loop@claude-plugins-official": true,
-    "plan-export@cc-marketplace": true,
-    "playwright@claude-plugins-official": true,
-    "code-simplifier@claude-plugins-official": true,
-    "superpowers@claude-plugins-official": true,
-    "agent-sdk-dev@claude-plugins-official": true,
-    "code-review@claude-plugins-official": true,
-    "security-guidance@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": true
-  },
-  "alwaysThinkingEnabled": true,
-  "feedbackSurveyState": {
-    "lastShownTime": 1753981396935
-  },
-  "autoUpdatesChannel": "stable",
-  "minimumVersion": "2.1.9"
+    "respectGitignore" : true
+  }
 }

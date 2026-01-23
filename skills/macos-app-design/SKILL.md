@@ -12,22 +12,6 @@ Guide for designing and implementing native-feeling, "good Mac citizen" apps: fa
 1. **Prefer system components and conventions** over bespoke UI—fastest path to "feels right on Mac"
 2. **If you customize bars, backgrounds, borders, or control chrome**: stop and justify it
 
-## When to Use
-
-**Use this skill when:**
-- Designing a new macOS application
-- Building with SwiftUI or AppKit for Mac
-- Implementing menu bar, keyboard shortcuts, or multi-window workflows
-- Working with Liquid Glass design system (macOS Tahoe 26+)
-- Creating sidebars, toolbars, or navigation patterns
-- Designing app icons or choosing SF Symbols
-- Ensuring accessibility on macOS (VoiceOver, keyboard navigation)
-- Making a cross-platform app "feel native" on Mac
-
-**Don't use when:**
-- Building iOS/iPadOS-only apps (different conventions)
-- Web apps without native Mac shell
-
 ## Quick Reference: Mac Citizen Checklist
 
 | Area | Requirement |
@@ -71,7 +55,7 @@ Identify your app type first:
 
 For complete design system details, Icon Composer workflow, SF Symbols guidance, evaluation rubrics, and Definition of Done checklist:
 
-See: [macos-design-guide.md](macos-design-guide.md)
+See: [references/macos-design-guide.md](references/macos-design-guide.md)
 
 ## Common Mistakes
 
