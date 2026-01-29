@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-Process Hunter - Find and categorize resource-hungry processes.
+CAVEMAN PROCESS HUNTER - Me find bad process. Me tell you which bonk.
 
 Usage:
     python hunt_processes.py [--cpu-threshold PCT] [--mem-threshold MB] [--json]
 
 Output:
-    Lists processes exceeding thresholds, categorized as:
-    - AUTO_KILL: Known safe-to-terminate patterns
-    - ASK: Suspicious but needs user confirmation
-    - IGNORE: System processes that should not be touched
+    Me sort process into pile:
+    - BONK_NOW: Safe bonk. No ask. Just smash.
+    - ASK_FIRST: Me not sure. You decide bonk or no bonk.
+    - NO_TOUCH: Sacred spirit process. Touch bring bad juju.
 """
 
 import subprocess
@@ -19,32 +19,32 @@ import argparse
 from dataclasses import dataclass
 from typing import Literal
 
-# Known patterns for auto-kill (orphan dev servers, duplicate instances)
+# Process me know safe to bonk
 AUTO_KILL_PATTERNS = [
-    # Next.js / Node dev servers (including next-server workers)
-    (r"next-server", "Next.js server"),
-    (r"node.*next.*dev", "Next.js dev server"),
-    (r"node.*webpack.*dev", "Webpack dev server"),
-    (r"node.*vite", "Vite dev server"),
-    (r"node.*turbo", "Turbopack dev server"),
-    (r"npm.*run.*dev", "npm dev script"),
-    (r"yarn.*dev", "yarn dev script"),
-    (r"pnpm.*dev", "pnpm dev script"),
+    # Next.js - these eat MANY fire
+    (r"next-server", "Next.js fire-eater"),
+    (r"node.*next.*dev", "Next.js cave server"),
+    (r"node.*webpack.*dev", "Webpack bundle-beast"),
+    (r"node.*vite", "Vite speed-demon"),
+    (r"node.*turbo", "Turbo thunder-lizard"),
+    (r"npm.*run.*dev", "npm run-run process"),
+    (r"yarn.*dev", "yarn spinny thing"),
+    (r"pnpm.*dev", "pnpm tiny demon"),
 
-    # React Native / Expo
-    (r"node.*react-native", "React Native bundler"),
-    (r"node.*expo", "Expo dev server"),
+    # React Native - also greedy
+    (r"node.*react-native", "React Native bridge troll"),
+    (r"node.*expo", "Expo magic box"),
 
-    # Multiple Claude instances (keep one, suggest killing others)
-    (r"claude", "Claude Code session"),
+    # Claude - too many clone bad
+    (r"claude", "Claude brain-in-box"),
 
-    # Stale build processes
-    (r"node.*esbuild", "esbuild process"),
-    (r"node.*rollup", "Rollup bundler"),
-    (r"tsc.*--watch", "TypeScript watch"),
+    # Build things
+    (r"node.*esbuild", "esbuild fast-maker"),
+    (r"node.*rollup", "Rollup bundle-roller"),
+    (r"tsc.*--watch", "TypeScript watcher-eye"),
 ]
 
-# System processes - NEVER touch these
+# SACRED PROCESSES - NEVER BONK OR BAD THING HAPPEN
 IGNORE_PATTERNS = [
     r"^kernel_task$",
     r"^launchd$",
@@ -79,13 +79,12 @@ class ProcessInfo:
 
 
 def get_processes(cpu_threshold: float, mem_threshold: float) -> list[ProcessInfo]:
-    """Get processes exceeding resource thresholds."""
-    # ps command that works on macOS and Linux
+    """Me look at all process. Find greedy ones."""
     cmd = ["ps", "-eo", "pid,pcpu,rss,comm,args"]
     result = subprocess.run(cmd, capture_output=True, text=True)
 
     processes = []
-    for line in result.stdout.strip().split("\n")[1:]:  # Skip header
+    for line in result.stdout.strip().split("\n")[1:]:
         parts = line.split(None, 4)
         if len(parts) < 5:
             continue
@@ -101,15 +100,12 @@ def get_processes(cpu_threshold: float, mem_threshold: float) -> list[ProcessInf
 
         mem_mb = mem_kb / 1024
 
-        # Skip if below thresholds
         if cpu < cpu_threshold and mem_mb < mem_threshold:
             continue
 
-        # Skip our own process
         if "hunt_processes" in command:
             continue
 
-        # Categorize
         category, reason = categorize_process(name, command)
 
         processes.append(ProcessInfo(
@@ -117,36 +113,32 @@ def get_processes(cpu_threshold: float, mem_threshold: float) -> list[ProcessInf
             name=name,
             cpu_percent=cpu,
             mem_mb=mem_mb,
-            command=command[:100],  # Truncate long commands
+            command=command[:100],
             category=category,
             reason=reason,
         ))
 
-    # Sort by CPU + memory impact
     processes.sort(key=lambda p: p.cpu_percent + (p.mem_mb / 100), reverse=True)
     return processes
 
 
 def categorize_process(name: str, command: str) -> tuple[Category, str]:
-    """Categorize a process based on known patterns."""
+    """Me decide: bonk, ask, or no touch."""
     full_str = f"{name} {command}".lower()
 
-    # Check ignore patterns first
     for pattern in IGNORE_PATTERNS:
         if re.search(pattern, name, re.IGNORECASE):
-            return "IGNORE", "System process"
+            return "IGNORE", "Sacred spirit - NO TOUCH"
 
-    # Check auto-kill patterns
     for pattern, desc in AUTO_KILL_PATTERNS:
         if re.search(pattern, full_str, re.IGNORECASE):
             return "AUTO_KILL", desc
 
-    # Everything else needs user confirmation
-    return "ASK", "Unknown high-resource process"
+    return "ASK", "Mystery creature - me not know"
 
 
 def format_output(processes: list[ProcessInfo], as_json: bool) -> str:
-    """Format process list for output."""
+    """Make pretty output for human eye-holes."""
     if as_json:
         return json.dumps([{
             "pid": p.pid,
@@ -158,45 +150,62 @@ def format_output(processes: list[ProcessInfo], as_json: bool) -> str:
             "reason": p.reason,
         } for p in processes], indent=2)
 
-    # Human-readable format
     lines = []
 
     auto_kill = [p for p in processes if p.category == "AUTO_KILL"]
     ask = [p for p in processes if p.category == "ASK"]
 
     if auto_kill:
-        lines.append("\n🎯 AUTO-KILL (safe to terminate):")
-        lines.append("-" * 60)
+        lines.append("")
+        lines.append("    🦴 BONK NOW! (me know these bad)")
+        lines.append("    " + "~" * 50)
         for p in auto_kill:
-            lines.append(f"  PID {p.pid:>6} | CPU {p.cpu_percent:>5.1f}% | MEM {p.mem_mb:>6.1f}MB")
-            lines.append(f"           | {p.reason}: {p.name}")
+            fire = "🔥" * min(int(p.cpu_percent / 20) + 1, 5)
+            rocks = "🪨" * min(int(p.mem_mb / 500) + 1, 5)
+            lines.append(f"      PID {p.pid:>6} │ Fire: {p.cpu_percent:>5.1f}% {fire}")
+            lines.append(f"                  │ Rock: {p.mem_mb:>6.1f}MB {rocks}")
+            lines.append(f"                  │ What: {p.reason}")
+            lines.append(f"                  │ Name: {p.name}")
+            lines.append("")
 
     if ask:
-        lines.append("\n❓ NEEDS CONFIRMATION:")
-        lines.append("-" * 60)
+        lines.append("")
+        lines.append("    🤔 ME NOT SURE! (you decide bonk)")
+        lines.append("    " + "~" * 50)
         for p in ask:
-            lines.append(f"  PID {p.pid:>6} | CPU {p.cpu_percent:>5.1f}% | MEM {p.mem_mb:>6.1f}MB")
-            lines.append(f"           | {p.command[:60]}")
+            fire = "🔥" * min(int(p.cpu_percent / 20) + 1, 5)
+            rocks = "🪨" * min(int(p.mem_mb / 500) + 1, 5)
+            lines.append(f"      PID {p.pid:>6} │ Fire: {p.cpu_percent:>5.1f}% {fire}")
+            lines.append(f"                  │ Rock: {p.mem_mb:>6.1f}MB {rocks}")
+            lines.append(f"                  │ What: {p.command[:50]}")
+            lines.append("")
 
     if not auto_kill and not ask:
-        lines.append("\n✅ No resource-hungry processes found!")
+        lines.append("")
+        lines.append("    ✨ CAVE CLEAN! No greedy process found!")
+        lines.append("    Me rest now. Zzzzz...")
+        lines.append("")
 
     return "\n".join(lines)
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Hunt resource-hungry processes")
+    parser = argparse.ArgumentParser(description="Caveman hunt bad process")
     parser.add_argument("--cpu-threshold", type=float, default=10.0,
-                        help="CPU percentage threshold (default: 10)")
+                        help="How much fire before me notice (default: 10)")
     parser.add_argument("--mem-threshold", type=float, default=500.0,
-                        help="Memory threshold in MB (default: 500)")
+                        help="How many rock before me notice (default: 500)")
     parser.add_argument("--json", action="store_true",
-                        help="Output as JSON")
+                        help="Fancy tribe format")
     args = parser.parse_args()
 
-    processes = get_processes(args.cpu_threshold, args.mem_threshold)
+    print("")
+    print("    ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓")
+    print("    ┃  🦣 CAVEMAN PROCESS HUNTER 🦣                    ┃")
+    print("    ┃  ᕦ(ò_óˇ)ᕤ  Me find greedy process!              ┃")
+    print("    ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛")
 
-    # Filter out IGNORE category for output
+    processes = get_processes(args.cpu_threshold, args.mem_threshold)
     visible = [p for p in processes if p.category != "IGNORE"]
 
     print(format_output(visible, args.json))

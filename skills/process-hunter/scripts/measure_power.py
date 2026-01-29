@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Measure system power consumption before/after process cleanup.
+CAVEMAN LIGHTNING JUICE CHECKER - Me watch magic box energy.
 
 Usage:
-    python measure_power.py before   # Save baseline
-    python measure_power.py after    # Compare to baseline
-    python measure_power.py report   # Show impact report (auto-detects baseline)
-    python measure_power.py status   # Current battery info
+    python measure_power.py before   # Remember how much juice before hunt
+    python measure_power.py after    # See if cave have more juice now
+    python measure_power.py report   # Show big celebration picture
+    python measure_power.py status   # Quick peek at juice rock
 """
 
 import subprocess
@@ -16,125 +16,122 @@ import re
 from pathlib import Path
 from datetime import datetime
 
-BASELINE_FILE = Path("/tmp/process_hunter_power_baseline.json")
+BASELINE_FILE = Path("/tmp/caveman_juice_memory.json")
 
 
-def get_battery_icon(percentage: int, width: int = 20) -> str:
-    """Generate ASCII battery with fill level."""
+def get_juice_bar(percentage: int, width: int = 20) -> str:
+    """Make picture of juice level with cave painting."""
     fill = int((percentage / 100) * width)
     empty = width - fill
 
-    # Choose fill character based on level
     if percentage > 60:
         fill_char = "█"
-        status = "▓"
     elif percentage > 30:
         fill_char = "▓"
-        status = "▒"
     else:
         fill_char = "▒"
-        status = "░"
 
     bar = fill_char * fill + "░" * empty
     return f"[{bar}]"
 
 
 def get_battery_art(percentage: int, improved: bool = False) -> str:
-    """Generate fancy ASCII battery."""
-    fill = int((percentage / 100) * 10)
-
+    """Draw fancy lightning rock picture."""
     if improved:
         spark = "⚡"
         corners = ("╔", "╗", "╚", "╝", "║", "═")
     else:
-        spark = "🔋"
+        spark = "🪨"
         corners = ("┌", "┐", "└", "┘", "│", "─")
 
     tl, tr, bl, br, v, h = corners
 
-    # Build battery
     lines = []
     lines.append(f"     {tl}{h*12}{tr}┐")
     lines.append(f"     {v} {percentage:>3}%  {spark}  {v}│")
-    lines.append(f"     {v} {get_battery_icon(percentage, 10)} {v}│")
+    lines.append(f"     {v} {get_juice_bar(percentage, 10)} {v}│")
     lines.append(f"     {bl}{h*12}{br}┘")
 
     return "\n".join(lines)
 
 
 def get_comparison_art(before_min: int, after_min: int) -> str:
-    """Generate ASCII art showing the time improvement."""
+    """Make cave painting showing time victory."""
     diff = after_min - before_min
 
     if diff > 30:
         art = """
-    ╭──────────────────────────────────────────╮
-    │  🚀 MASSIVE IMPROVEMENT 🚀               │
-    │                                          │
-    │     BEFORE          AFTER                │
-    │    ┌──────┐       ┌──────┐              │
-    │    │{before:^6}│  >>>  │{after:^6}│   +{diff} min  │
-    │    └──────┘       └──────┘              │
-    │                                          │
-    │  ✨ Your battery will thank you! ✨      │
-    ╰──────────────────────────────────────────╯
+    ╭────────────────────────────────────────────╮
+    │  🦣 MAMMOTH-SIZE VICTORY! 🦣                │
+    │                                            │
+    │      BEFORE           AFTER                │
+    │     ┌──────┐        ┌──────┐              │
+    │     │{before:^6}│  >>>  │{after:^6}│  +{diff} sun-moves│
+    │     └──────┘        └──────┘              │
+    │                                            │
+    │  ✨ Lightning rock VERY happy! ✨          │
+    │     Tribe can watch many more fire!        │
+    ╰────────────────────────────────────────────╯
 """
     elif diff > 10:
         art = """
-    ╭────────────────────────────────────────╮
-    │  ⚡ NICE IMPROVEMENT ⚡                 │
-    │                                        │
-    │   {before:>5} min  ──────►  {after:>5} min       │
-    │                                        │
-    │   Battery life extended by +{diff} min   │
-    ╰────────────────────────────────────────╯
+    ╭────────────────────────────────────────────╮
+    │  🦴 GOOD HUNT! Caveman proud!              │
+    │                                            │
+    │   {before:>5} sun  ──────►  {after:>5} sun           │
+    │                                            │
+    │   Lightning rock last +{diff} more sun-moves! │
+    ╰────────────────────────────────────────────╯
 """
     elif diff > 0:
         art = """
-    ╭────────────────────────────────────────╮
-    │  ✓ Slight improvement                  │
-    │   {before:>5} min  ──►  {after:>5} min (+{diff} min)  │
-    ╰────────────────────────────────────────╯
+    ╭────────────────────────────────────────────╮
+    │  👍 Little bit better. Me take it.         │
+    │   {before:>5} sun  ──►  {after:>5} sun (+{diff} sun)      │
+    ╰────────────────────────────────────────────╯
 """
     elif diff == 0:
         art = """
-    ╭────────────────────────────────────────╮
-    │  ➡️  No change in battery estimate      │
-    │     (may take a minute to update)      │
-    ╰────────────────────────────────────────╯
+    ╭────────────────────────────────────────────╮
+    │  🤷 Hmm. Same same. Maybe need wait.       │
+    │     Lightning rock still thinking...       │
+    ╰────────────────────────────────────────────╯
 """
     else:
         art = """
-    ╭────────────────────────────────────────╮
-    │  ⚠️  Battery estimate dropped           │
-    │   {before:>5} min  ──►  {after:>5} min ({diff} min)   │
-    │   (This can happen during recalc)      │
-    ╰────────────────────────────────────────╯
+    ╭────────────────────────────────────────────╮
+    │  😕 Ugh? Number go down?                   │
+    │   {before:>5} sun  ──►  {after:>5} sun ({diff} sun)      │
+    │   Lightning rock confused. Wait bit.       │
+    ╰────────────────────────────────────────────╯
 """
 
     return art.format(before=before_min, after=after_min, diff=diff)
 
 
 def get_process_kill_art(killed_count: int, mem_freed_gb: float) -> str:
-    """Generate ASCII art celebrating the kills."""
+    """Celebrate the hunt with cave paintings."""
     if killed_count == 0:
         return ""
 
     skulls = "💀" * min(killed_count, 5)
+    clubs = "🏏" * min(killed_count, 5)
 
     return f"""
-    ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-    ┃  {skulls:^37}  ┃
-    ┃                                         ┃
-    ┃   Processes Terminated: {killed_count:>3}              ┃
-    ┃   Memory Freed: ~{mem_freed_gb:.1f} GB                 ┃
-    ┃                                         ┃
-    ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+    ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+    ┃  {skulls:^41}  ┃
+    ┃  {clubs:^41}  ┃
+    ┃                                             ┃
+    ┃   Creatures Bonked: {killed_count:>3}                      ┃
+    ┃   Cave Space Free: ~{mem_freed_gb:.1f} big rocks            ┃
+    ┃                                             ┃
+    ┃   OOGA BOOGA! GOOD HUNT!                    ┃
+    ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 """
 
 
 def get_battery_info() -> dict:
-    """Get current battery status from pmset."""
+    """Ask lightning rock how much juice left."""
     result = subprocess.run(["pmset", "-g", "batt"], capture_output=True, text=True)
     output = result.stdout
 
@@ -151,13 +148,13 @@ def get_battery_info() -> dict:
         info["percentage"] = int(pct_match.group(1))
 
     if "discharging" in output.lower():
-        info["status"] = "discharging"
+        info["status"] = "juice leaving"
     elif "charging" in output.lower():
-        info["status"] = "charging"
+        info["status"] = "eating lightning"
     elif "charged" in output.lower():
-        info["status"] = "charged"
+        info["status"] = "belly full"
     elif "AC Power" in output:
-        info["status"] = "ac_power"
+        info["status"] = "plugged to wall-vine"
 
     time_match = re.search(r"(\d+:\d+) remaining", output)
     if time_match:
@@ -169,7 +166,7 @@ def get_battery_info() -> dict:
 
 
 def get_top_cpu_processes(n: int = 5) -> list:
-    """Get top N CPU-consuming processes."""
+    """Find which creature eating most fire."""
     result = subprocess.run(
         ["ps", "-eo", "pid,pcpu,rss,comm", "-r"],
         capture_output=True, text=True
@@ -188,7 +185,7 @@ def get_top_cpu_processes(n: int = 5) -> list:
 
 
 def save_baseline(processes_killed: int = 0, mem_freed_mb: float = 0):
-    """Save current state as baseline."""
+    """Caveman remember this moment for later compare."""
     data = {
         "battery": get_battery_info(),
         "top_processes": get_top_cpu_processes(),
@@ -197,18 +194,21 @@ def save_baseline(processes_killed: int = 0, mem_freed_mb: float = 0):
     }
     BASELINE_FILE.write_text(json.dumps(data, indent=2))
 
-    print("\n    ╔═══════════════════════════════════╗")
-    print("    ║   📊 BASELINE SAVED               ║")
-    print("    ╠═══════════════════════════════════╣")
-    print(f"    ║   Battery: {data['battery']['percentage']:>3}%                  ║")
+    print("")
+    print("    ╔═══════════════════════════════════════╗")
+    print("    ║  🧠 CAVEMAN REMEMBER THIS MOMENT      ║")
+    print("    ╠═══════════════════════════════════════╣")
+    print(f"    ║   Juice Level: {data['battery']['percentage']:>3}%                  ║")
     if data['battery']['time_remaining']:
-        print(f"    ║   Remaining: {data['battery']['time_remaining']:>5}              ║")
-    print("    ╚═══════════════════════════════════╝")
-    print("\n    💡 Run cleanup, then 'measure_power.py after'")
+        print(f"    ║   Sun-moves Left: {data['battery']['time_remaining']:>5}            ║")
+    print("    ╚═══════════════════════════════════════╝")
+    print("")
+    print("    💡 Now go bonk! Then run 'measure_power.py after'")
+    print("")
 
 
 def show_impact_report(processes_killed: int = 0, mem_freed_mb: float = 0):
-    """Show a cool impact report after killing processes."""
+    """Show big celebration of successful hunt."""
     has_baseline = BASELINE_FILE.exists()
 
     current = get_battery_info()
@@ -216,17 +216,15 @@ def show_impact_report(processes_killed: int = 0, mem_freed_mb: float = 0):
 
     mem_freed_gb = mem_freed_mb / 1024 if mem_freed_mb > 0 else 0
 
-    # Header
     print("\n")
-    print("    ╔════════════════════════════════════════════════════╗")
-    print("    ║          ⚡ PROCESS HUNTER REPORT ⚡               ║")
-    print("    ╚════════════════════════════════════════════════════╝")
+    print("    ╔════════════════════════════════════════════════════════╗")
+    print("    ║     🦣 CAVEMAN HUNT REPORT 🦣                          ║")
+    print("    ║     ᕦ(ò_óˇ)ᕤ  Me show what happen!                     ║")
+    print("    ╚════════════════════════════════════════════════════════╝")
 
-    # Kill stats
     if processes_killed > 0:
         print(get_process_kill_art(processes_killed, mem_freed_gb))
 
-    # Battery comparison if we have baseline
     if has_baseline:
         baseline = json.loads(BASELINE_FILE.read_text())
         before = baseline['battery']
@@ -238,8 +236,7 @@ def show_impact_report(processes_killed: int = 0, mem_freed_mb: float = 0):
         if before_min and after_min:
             print(get_comparison_art(before_min, after_min))
 
-        # Process comparison
-        print("\n    ┌─── CPU BEFORE ────────┬─── CPU AFTER ─────────┐")
+        print("\n    ┌─── FIRE BEFORE ───────┬─── FIRE AFTER ────────┐")
         before_procs = baseline.get('top_processes', [])[:3]
         after_procs = current_procs[:3]
 
@@ -252,32 +249,31 @@ def show_impact_report(processes_killed: int = 0, mem_freed_mb: float = 0):
 
         print("    └───────────────────────┴───────────────────────┘")
 
-        # Total CPU reduction
         before_total = sum(p['cpu'] for p in before_procs)
         after_total = sum(p['cpu'] for p in after_procs)
         reduction = before_total - after_total
 
         if reduction > 0:
-            print(f"\n    📉 Top-3 CPU usage: {before_total:.0f}% → {after_total:.0f}% (↓{reduction:.0f}%)")
+            print(f"\n    📉 Fire eating: {before_total:.0f}% → {after_total:.0f}% (↓{reduction:.0f}% less fire!)")
 
-    # Current battery status
     improved = has_baseline and processes_killed > 0
     print("\n" + get_battery_art(current['percentage'], improved=improved))
 
     if current['time_remaining']:
-        print(f"\n    ⏱️  Time remaining: {current['time_remaining']}")
+        print(f"\n    ⏱️  Sun-moves remaining: {current['time_remaining']}")
 
-    # Footer
-    print("\n    ════════════════════════════════════════════════════")
+    print("\n    ════════════════════════════════════════════════════════")
     if processes_killed > 0:
-        print("    🌱 Your MacBook is breathing easier now!")
+        print("    🌿 Magic lightning box breathe easy now!")
+        print("    🦴 Caveman did good. Tribe proud.")
     print("")
 
 
 def compare_to_baseline():
-    """Compare current state to saved baseline."""
+    """Compare now to what caveman remember."""
     if not BASELINE_FILE.exists():
-        print("❌ No baseline found. Run 'python measure_power.py before' first.")
+        print("    🤔 Ugh! Caveman no remember before-time.")
+        print("    Run 'measure_power.py before' first!")
         return
 
     baseline = json.loads(BASELINE_FILE.read_text())
@@ -288,12 +284,15 @@ def compare_to_baseline():
 
 
 def show_status():
-    """Show current battery status."""
+    """Quick look at lightning rock."""
     info = get_battery_info()
-    print("\n" + get_battery_art(info['percentage']))
-    print(f"\n    Status: {info['status']}")
+    print("")
+    print("    🪨 LIGHTNING ROCK STATUS")
+    print("    " + "=" * 30)
+    print(get_battery_art(info['percentage']))
+    print(f"\n    What doing: {info['status']}")
     if info['time_remaining']:
-        print(f"    Time remaining: {info['time_remaining']}")
+        print(f"    Sun-moves left: {info['time_remaining']}")
     print("")
 
 
@@ -305,21 +304,19 @@ def main():
     cmd = sys.argv[1].lower()
 
     if cmd == "before":
-        # Optional: pass killed count and mem freed
         killed = int(sys.argv[2]) if len(sys.argv) > 2 else 0
         mem = float(sys.argv[3]) if len(sys.argv) > 3 else 0
         save_baseline(killed, mem)
     elif cmd == "after":
         compare_to_baseline()
     elif cmd == "report":
-        # report <killed_count> <mem_freed_mb>
         killed = int(sys.argv[2]) if len(sys.argv) > 2 else 0
         mem = float(sys.argv[3]) if len(sys.argv) > 3 else 0
         show_impact_report(killed, mem)
     elif cmd == "status":
         show_status()
     else:
-        print(f"Unknown command: {cmd}")
+        print(f"    🤔 Ugh? '{cmd}' not caveman word.")
         print(__doc__)
 
 
