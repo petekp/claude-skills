@@ -21,7 +21,8 @@ from typing import Literal
 
 # Known patterns for auto-kill (orphan dev servers, duplicate instances)
 AUTO_KILL_PATTERNS = [
-    # Next.js / Node dev servers
+    # Next.js / Node dev servers (including next-server workers)
+    (r"next-server", "Next.js server"),
     (r"node.*next.*dev", "Next.js dev server"),
     (r"node.*webpack.*dev", "Webpack dev server"),
     (r"node.*vite", "Vite dev server"),

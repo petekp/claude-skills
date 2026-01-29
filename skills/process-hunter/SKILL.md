@@ -1,85 +1,82 @@
 ---
 name: process-hunter
-description: [TODO: Complete and informative explanation of what the skill does and when to use it. Include WHEN to use this skill - specific scenarios, file types, or tasks that trigger it.]
+description: >
+  Find and terminate resource-hungry processes to save battery. Use when asked to
+  "kill processes", "clean up dev servers", "save battery", "find resource hogs",
+  "stop next.js servers", "terminate claude sessions", or "hunt processes".
+  Auto-terminates known safe targets (dev servers, duplicate Claude sessions).
+  Asks before killing unknown processes.
 ---
 
 # Process Hunter
 
-## Overview
+Find processes consuming excessive CPU/memory and terminate them to preserve battery life.
 
-[TODO: 1-2 sentences explaining what this skill enables]
+## Workflow
 
-## Structuring This Skill
+1. Run `scripts/hunt_processes.py` to scan for resource hogs
+2. Review the categorized output:
+   - **AUTO-KILL**: Safe to terminate (dev servers, duplicate Claude sessions)
+   - **NEEDS CONFIRMATION**: Ask user before terminating
+3. Terminate processes using `scripts/terminate_process.py`
 
-[TODO: Choose the structure that best fits this skill's purpose. Common patterns:
+## Usage
 
-**1. Workflow-Based** (best for sequential processes)
-- Works well when there are clear step-by-step procedures
-- Example: DOCX skill with "Workflow Decision Tree" → "Reading" → "Creating" → "Editing"
-- Structure: ## Overview → ## Workflow Decision Tree → ## Step 1 → ## Step 2...
+### Scan for processes
 
-**2. Task-Based** (best for tool collections)
-- Works well when the skill offers different operations/capabilities
-- Example: PDF skill with "Quick Start" → "Merge PDFs" → "Split PDFs" → "Extract Text"
-- Structure: ## Overview → ## Quick Start → ## Task Category 1 → ## Task Category 2...
+```bash
+python scripts/hunt_processes.py
+```
 
-**3. Reference/Guidelines** (best for standards or specifications)
-- Works well for brand guidelines, coding standards, or requirements
-- Example: Brand styling with "Brand Guidelines" → "Colors" → "Typography" → "Features"
-- Structure: ## Overview → ## Guidelines → ## Specifications → ## Usage...
+Options:
+- `--cpu-threshold PCT` - CPU threshold (default: 10%)
+- `--mem-threshold MB` - Memory threshold (default: 500MB)
+- `--json` - Output as JSON for programmatic use
 
-**4. Capabilities-Based** (best for integrated systems)
-- Works well when the skill provides multiple interrelated features
-- Example: Product Management with "Core Capabilities" → numbered capability list
-- Structure: ## Overview → ## Core Capabilities → ### 1. Feature → ### 2. Feature...
+### Terminate a process
 
-Patterns can be mixed and matched as needed. Most skills combine patterns (e.g., start with task-based, add workflow for complex operations).
+```bash
+python scripts/terminate_process.py <pid>
+```
 
-Delete this entire "Structuring This Skill" section when done - it's just guidance.]
+Options:
+- `--force` - Skip graceful shutdown, force kill immediately
 
-## [TODO: Replace with the first main section based on chosen structure]
+## Auto-Kill Targets
 
-[TODO: Add content here. See examples in existing skills:
-- Code samples for technical skills
-- Decision trees for complex workflows
-- Concrete examples with realistic user requests
-- References to scripts/templates/references as needed]
+These are automatically categorized as safe to terminate:
+- Next.js dev servers (`next-server`, `next dev`)
+- Vite/Webpack dev servers
+- npm/yarn/pnpm dev scripts
+- React Native / Expo bundlers
+- Claude Code sessions (suggest killing duplicates)
+- TypeScript watch processes
+- esbuild/Rollup bundlers
 
-## Resources
+## When to Ask
 
-This skill includes example resource directories that demonstrate how to organize different types of bundled resources:
+Always ask user confirmation for:
+- Unknown high-resource processes
+- System-adjacent processes (even if not in ignore list)
+- Any process the user might have intentionally started
 
-### scripts/
-Executable code (Python/Bash/etc.) that can be run directly to perform specific operations.
+## Example Session
 
-**Examples from other skills:**
-- PDF skill: `fill_fillable_fields.py`, `extract_form_field_info.py` - utilities for PDF manipulation
-- DOCX skill: `document.py`, `utilities.py` - Python modules for document processing
+```
+$ python scripts/hunt_processes.py
 
-**Appropriate for:** Python scripts, shell scripts, or any executable code that performs automation, data processing, or specific operations.
+🎯 AUTO-KILL (safe to terminate):
+------------------------------------------------------------
+  PID  61331 | CPU 121.9% | MEM 2886.5MB
+           | Next.js server: next-server
+  PID  73528 | CPU  30.6% | MEM  572.7MB
+           | Claude Code session: claude
 
-**Note:** Scripts may be executed without loading into context, but can still be read by Claude for patching or environment adjustments.
+❓ NEEDS CONFIRMATION:
+------------------------------------------------------------
+  PID  50706 | CPU   3.8% | MEM  834.5MB
+           | /Applications/Dia.app/Contents/MacOS/Dia
+```
 
-### references/
-Documentation and reference material intended to be loaded into context to inform Claude's process and thinking.
-
-**Examples from other skills:**
-- Product management: `communication.md`, `context_building.md` - detailed workflow guides
-- BigQuery: API reference documentation and query examples
-- Finance: Schema documentation, company policies
-
-**Appropriate for:** In-depth documentation, API references, database schemas, comprehensive guides, or any detailed information that Claude should reference while working.
-
-### assets/
-Files not intended to be loaded into context, but rather used within the output Claude produces.
-
-**Examples from other skills:**
-- Brand styling: PowerPoint template files (.pptx), logo files
-- Frontend builder: HTML/React boilerplate project directories
-- Typography: Font files (.ttf, .woff2)
-
-**Appropriate for:** Templates, boilerplate code, document templates, images, icons, fonts, or any files meant to be copied or used in the final output.
-
----
-
-**Any unneeded directories can be deleted.** Not every skill requires all three types of resources.
+For AUTO-KILL processes, terminate without asking (unless user wants to review).
+For NEEDS CONFIRMATION, use AskUserQuestion before terminating.
