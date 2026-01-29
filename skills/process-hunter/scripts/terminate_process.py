@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-CAVEMAN BONK TOOL - Me smash process good.
+Terminate a process gracefully, with fallback to force kill.
 
 Usage:
     python terminate_process.py <pid> [--force]
 
-Me try gentle tap first. If process no listen, ME USE BIG CLUB.
+Sends SIGTERM first, waits 3 seconds, then SIGKILL if still running.
 """
 
 import subprocess
@@ -17,7 +17,7 @@ import argparse
 
 
 def get_process_name(pid: int) -> str | None:
-    """Me look up name of creature."""
+    """Get process name for a PID."""
     try:
         result = subprocess.run(
             ["ps", "-p", str(pid), "-o", "comm="],
@@ -29,9 +29,9 @@ def get_process_name(pid: int) -> str | None:
 
 
 def is_running(pid: int) -> bool:
-    """Me check if creature still breathing."""
+    """Check if a process is still running."""
     try:
-        os.kill(pid, 0)
+        os.kill(pid, 0)  # Signal 0 just checks existence
         return True
     except OSError:
         return False
@@ -39,64 +39,58 @@ def is_running(pid: int) -> bool:
 
 def terminate(pid: int, force: bool = False) -> tuple[bool, str]:
     """
-    ME BONK PROCESS.
+    Terminate a process.
 
-    Return (success, grunt message)
+    Returns (success, message)
     """
     name = get_process_name(pid)
     if not name:
-        return False, f"🦴 Ugh! Process {pid} already gone. Maybe mammoth step on it?"
+        return False, f"Process {pid} not found or already terminated"
 
     if force:
         try:
             os.kill(pid, signal.SIGKILL)
-            return True, f"💥 OOGA BOOGA! Me use BIG CLUB on {name} (PID {pid})! Process flat now."
+            return True, f"Force killed {name} (PID {pid})"
         except PermissionError:
-            return False, f"🚫 Grunt! Cave spirits say no touch {name} (PID {pid}). Need more shaman power."
+            return False, f"Permission denied killing {name} (PID {pid})"
         except OSError as e:
-            return False, f"😵 Ugh! Something go wrong bonking {name}: {e}"
+            return False, f"Error killing {name}: {e}"
 
-    # First try gentle tap, then BIG CLUB
+    # Graceful termination: SIGTERM, wait, then SIGKILL
     try:
         os.kill(pid, signal.SIGTERM)
-        print(f"    👋 Me tap {name} (PID {pid}) gentle... 'Hey. You go now.'")
-        print(f"    ⏳ Me wait...")
+        print(f"Sent SIGTERM to {name} (PID {pid}), waiting...")
 
+        # Wait up to 3 seconds for graceful shutdown
         for _ in range(6):
             time.sleep(0.5)
             if not is_running(pid):
-                return True, f"    ✨ {name} listen to caveman! Walk away peaceful. Good process."
+                return True, f"Gracefully terminated {name} (PID {pid})"
 
-        # Still there? TIME FOR BIG CLUB
-        print(f"    😤 Process no listen! ME GET BIG CLUB!")
+        # Still running, force kill
         os.kill(pid, signal.SIGKILL)
         time.sleep(0.5)
 
         if not is_running(pid):
-            return True, f"    💥 BONK! {name} (PID {pid}) no more. Should have listened first time!"
+            return True, f"Force killed {name} (PID {pid}) after SIGTERM failed"
         else:
-            return False, f"    😱 Impossible! {name} still alive after big club! Must be spirit!"
+            return False, f"Failed to kill {name} (PID {pid})"
 
     except PermissionError:
-        return False, f"    🚫 Cave spirits protect {name} (PID {pid}). Me not strong enough."
+        return False, f"Permission denied terminating {name} (PID {pid})"
     except OSError as e:
-        return False, f"    😵 Ugh! Me club hit rock instead: {e}"
+        return False, f"Error terminating {name}: {e}"
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Caveman bonk process")
-    parser.add_argument("pid", type=int, help="Which creature to bonk")
+    parser = argparse.ArgumentParser(description="Terminate a process")
+    parser.add_argument("pid", type=int, help="Process ID to terminate")
     parser.add_argument("--force", action="store_true",
-                        help="Skip gentle tap. Go straight to BIG CLUB.")
+                        help="Skip graceful shutdown, force kill immediately")
     args = parser.parse_args()
-
-    print("")
-    print("    🏏 CAVEMAN BONK TOOL")
-    print("    " + "=" * 40)
 
     success, message = terminate(args.pid, args.force)
     print(message)
-    print("")
     sys.exit(0 if success else 1)
 
 

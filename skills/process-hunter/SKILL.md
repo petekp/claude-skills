@@ -1,152 +1,82 @@
 ---
 name: process-hunter
 description: >
-  CAVEMAN HUNT BAD PROCESS! Me find greedy creature eating fire and rocks.
-  Me bonk them good. Use when tribe say "kill processes", "clean up servers",
-  "save battery", "find resource hogs", "bonk next.js", or "hunt processes".
-  Me bonk known bad creature automatic. Me ask before bonk mystery creature.
+  Find and terminate resource-hungry processes to save battery. Use when asked to
+  "kill processes", "clean up dev servers", "save battery", "find resource hogs",
+  "stop next.js servers", "terminate claude sessions", or "hunt processes".
+  Auto-terminates known safe targets (dev servers, duplicate Claude sessions).
+  Asks before killing unknown processes.
 ---
 
-# 🦣 CAVEMAN PROCESS HUNTER 🦣
+# Process Hunter
 
-Me find greedy process eating all fire (CPU) and hoarding rocks (memory).
-Me bonk them. Lightning rock (battery) happy. Tribe proud.
+Find processes consuming excessive CPU/memory and terminate them to preserve battery life.
 
-## How Hunt Work
+## Workflow
 
-**IMPORTANT:** Always show hunt report after bonking! Tribe need see victory!
+1. Run `scripts/hunt_processes.py` to scan for resource hogs
+2. Review the categorized output:
+   - **AUTO-KILL**: Safe to terminate (dev servers, duplicate Claude sessions)
+   - **NEEDS CONFIRMATION**: Ask user before terminating
+3. Terminate processes using `scripts/terminate_process.py`
 
-1. **Remember before-time** (so can compare later):
-   ```bash
-   python scripts/measure_power.py before
-   ```
+## Usage
 
-2. **Find greedy creature**:
-   ```bash
-   python scripts/hunt_processes.py
-   ```
-
-3. **BONK!** (track how many bonk and how much rock freed)
-
-4. **Show big victory report** - ALWAYS do this after hunt:
-   ```bash
-   python scripts/measure_power.py report <bonk_count> <rocks_freed_mb>
-   ```
-
-## Cave Tools
-
-### hunt_processes.py - Find Bad Creature
+### Scan for processes
 
 ```bash
-python scripts/hunt_processes.py [--cpu-threshold 10] [--mem-threshold 500]
+python scripts/hunt_processes.py
 ```
 
-Me sort creature into pile:
-- **🦴 BONK NOW**: Me know these bad. Safe smash.
-- **🤔 ME NOT SURE**: Mystery creature. Ask human first.
+Options:
+- `--cpu-threshold PCT` - CPU threshold (default: 10%)
+- `--mem-threshold MB` - Memory threshold (default: 500MB)
+- `--json` - Output as JSON for programmatic use
 
-### terminate_process.py - BONK Tool
+### Terminate a process
 
 ```bash
-python scripts/terminate_process.py <pid> [--force]
+python scripts/terminate_process.py <pid>
 ```
 
-Me try gentle tap first. If creature no listen, ME USE BIG CLUB.
-Use `--force` to skip gentle tap. Go straight to BIG CLUB.
+Options:
+- `--force` - Skip graceful shutdown, force kill immediately
 
-### measure_power.py - Lightning Rock Checker
+## Auto-Kill Targets
 
-```bash
-python scripts/measure_power.py before    # Remember this moment
-python scripts/measure_power.py report    # Show hunt victory
-python scripts/measure_power.py status    # Quick peek at juice
-```
+These are automatically categorized as safe to terminate:
+- Next.js dev servers (`next-server`, `next dev`)
+- Vite/Webpack dev servers
+- npm/yarn/pnpm dev scripts
+- React Native / Expo bundlers
+- Claude Code sessions (suggest killing duplicates)
+- TypeScript watch processes
+- esbuild/Rollup bundlers
 
-## Creature Me Know Safe To Bonk
+## When to Ask
 
-These greedy. These eat much fire. BONK:
-- Next.js fire-eater (`next-server`)
-- Webpack bundle-beast
-- Vite speed-demon
-- Turbo thunder-lizard
-- npm/yarn/pnpm run-run things
-- React Native bridge troll
-- Claude brain-in-box (when too many clone)
-- TypeScript watcher-eye
-- esbuild fast-maker
+Always ask user confirmation for:
+- Unknown high-resource processes
+- System-adjacent processes (even if not in ignore list)
+- Any process the user might have intentionally started
 
-## When Ask Human First
-
-Use AskUserQuestion before bonk:
-- Mystery creature me not recognize
-- Human app (browser, picture-maker, code-cave)
-- Anything not in bonk-safe list
-
-## Example Hunt
+## Example Session
 
 ```
-    ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-    ┃  🦣 CAVEMAN PROCESS HUNTER 🦣                    ┃
-    ┃  ᕦ(ò_óˇ)ᕤ  Me find greedy process!              ┃
-    ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+$ python scripts/hunt_processes.py
 
-    🦴 BONK NOW! (me know these bad)
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      PID  61331 │ Fire: 121.9% 🔥🔥🔥🔥🔥
-                  │ Rock: 2886.5MB 🪨🪨🪨🪨🪨
-                  │ What: Next.js fire-eater
-                  │ Name: next-server
+🎯 AUTO-KILL (safe to terminate):
+------------------------------------------------------------
+  PID  61331 | CPU 121.9% | MEM 2886.5MB
+           | Next.js server: next-server
+  PID  73528 | CPU  30.6% | MEM  572.7MB
+           | Claude Code session: claude
+
+❓ NEEDS CONFIRMATION:
+------------------------------------------------------------
+  PID  50706 | CPU   3.8% | MEM  834.5MB
+           | /Applications/Dia.app/Contents/MacOS/Dia
 ```
 
-## Victory Report
-
-After hunt, always show:
-
-```
-    ╔════════════════════════════════════════════════════════╗
-    ║     🦣 CAVEMAN HUNT REPORT 🦣                          ║
-    ║     ᕦ(ò_óˇ)ᕤ  Me show what happen!                     ║
-    ╚════════════════════════════════════════════════════════╝
-
-    ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-    ┃                    💀💀💀💀💀                    ┃
-    ┃                    🏏🏏🏏🏏🏏                    ┃
-    ┃                                             ┃
-    ┃   Creatures Bonked:   5                      ┃
-    ┃   Cave Space Free: ~7.8 big rocks            ┃
-    ┃                                             ┃
-    ┃   OOGA BOOGA! GOOD HUNT!                    ┃
-    ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-
-    ╭────────────────────────────────────────────╮
-    │  🦣 MAMMOTH-SIZE VICTORY! 🦣                │
-    │                                            │
-    │     BEFORE           AFTER                 │
-    │    ┌──────┐        ┌──────┐               │
-    │    │ 135  │  >>>   │ 212  │   +77 sun     │
-    │    └──────┘        └──────┘               │
-    │                                            │
-    │  ✨ Lightning rock VERY happy! ✨          │
-    ╰────────────────────────────────────────────╯
-
-     ╔════════════╗┐
-     ║  58%  ⚡  ║│
-     ║ [█████░░░░░] ║│
-     ╚════════════╝┘
-
-    ⏱️  Sun-moves remaining: 3:32
-
-    ════════════════════════════════════════════════════════
-    🌿 Magic lightning box breathe easy now!
-    🦴 Caveman did good. Tribe proud.
-```
-
-## Caveman Wisdom
-
-- Fire = CPU (how much thinking)
-- Rock = Memory (how much cave space)
-- Sun-moves = Minutes (time before lightning rock sleep)
-- Lightning rock = Battery
-- Bonk = Terminate process
-- Big club = SIGKILL (force)
-- Gentle tap = SIGTERM (nice ask)
+For AUTO-KILL processes, terminate without asking (unless user wants to review).
+For NEEDS CONFIRMATION, use AskUserQuestion before terminating.
