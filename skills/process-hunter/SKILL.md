@@ -14,69 +14,104 @@ Find processes consuming excessive CPU/memory and terminate them to preserve bat
 
 ## Workflow
 
-1. Run `scripts/hunt_processes.py` to scan for resource hogs
-2. Review the categorized output:
-   - **AUTO-KILL**: Safe to terminate (dev servers, duplicate Claude sessions)
-   - **NEEDS CONFIRMATION**: Ask user before terminating
-3. Terminate processes using `scripts/terminate_process.py`
+**IMPORTANT:** Always show the battery impact report after killing processes!
 
-## Usage
+1. **Save baseline** before scanning:
+   ```bash
+   python scripts/measure_power.py before
+   ```
 
-### Scan for processes
+2. **Scan** for resource hogs:
+   ```bash
+   python scripts/hunt_processes.py
+   ```
+
+3. **Terminate** processes (track count and memory freed)
+
+4. **Show impact report** - ALWAYS do this after killing processes:
+   ```bash
+   python scripts/measure_power.py report <killed_count> <mem_freed_mb>
+   ```
+
+## Scripts
+
+### hunt_processes.py - Find resource hogs
 
 ```bash
-python scripts/hunt_processes.py
+python scripts/hunt_processes.py [--cpu-threshold 10] [--mem-threshold 500] [--json]
 ```
 
-Options:
-- `--cpu-threshold PCT` - CPU threshold (default: 10%)
-- `--mem-threshold MB` - Memory threshold (default: 500MB)
-- `--json` - Output as JSON for programmatic use
+Output categories:
+- **AUTO-KILL**: Safe to terminate without asking
+- **NEEDS CONFIRMATION**: Ask user first
 
-### Terminate a process
+### terminate_process.py - Kill a process
 
 ```bash
-python scripts/terminate_process.py <pid>
+python scripts/terminate_process.py <pid> [--force]
 ```
 
-Options:
-- `--force` - Skip graceful shutdown, force kill immediately
+### measure_power.py - Battery impact reporting
+
+```bash
+python scripts/measure_power.py before              # Save baseline
+python scripts/measure_power.py report <N> <MB>     # Show impact (N killed, MB freed)
+python scripts/measure_power.py after               # Compare to baseline
+python scripts/measure_power.py status              # Quick battery check
+```
 
 ## Auto-Kill Targets
 
-These are automatically categorized as safe to terminate:
-- Next.js dev servers (`next-server`, `next dev`)
-- Vite/Webpack dev servers
+Safe to terminate without asking:
+- Next.js servers (`next-server`, `next dev`)
+- Vite/Webpack/Turbopack dev servers
 - npm/yarn/pnpm dev scripts
 - React Native / Expo bundlers
-- Claude Code sessions (suggest killing duplicates)
-- TypeScript watch processes
-- esbuild/Rollup bundlers
+- Duplicate Claude Code sessions
+- TypeScript watch, esbuild, Rollup
 
 ## When to Ask
 
-Always ask user confirmation for:
+Use AskUserQuestion before killing:
 - Unknown high-resource processes
-- System-adjacent processes (even if not in ignore list)
-- Any process the user might have intentionally started
+- User applications (browsers, IDEs, creative apps)
+- Anything not in the auto-kill list
 
-## Example Session
+## Example Output
+
+After killing processes, always show the impact report:
 
 ```
-$ python scripts/hunt_processes.py
+    ╔════════════════════════════════════════════════════╗
+    ║          ⚡ PROCESS HUNTER REPORT ⚡               ║
+    ╚════════════════════════════════════════════════════╝
 
-🎯 AUTO-KILL (safe to terminate):
-------------------------------------------------------------
-  PID  61331 | CPU 121.9% | MEM 2886.5MB
-           | Next.js server: next-server
-  PID  73528 | CPU  30.6% | MEM  572.7MB
-           | Claude Code session: claude
+    ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+    ┃                  💀💀💀💀💀                  ┃
+    ┃                                         ┃
+    ┃   Processes Terminated:   5              ┃
+    ┃   Memory Freed: ~7.8 GB                 ┃
+    ┃                                         ┃
+    ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-❓ NEEDS CONFIRMATION:
-------------------------------------------------------------
-  PID  50706 | CPU   3.8% | MEM  834.5MB
-           | /Applications/Dia.app/Contents/MacOS/Dia
+    ╭──────────────────────────────────────────╮
+    │  🚀 MASSIVE IMPROVEMENT 🚀               │
+    │                                          │
+    │     BEFORE          AFTER                │
+    │    ┌──────┐       ┌──────┐              │
+    │    │ 135  │  >>>  │ 212  │   +77 min    │
+    │    └──────┘       └──────┘              │
+    │                                          │
+    │  ✨ Your battery will thank you! ✨      │
+    ╰──────────────────────────────────────────╯
+
+     ╔════════════╗┐
+     ║  58%  ⚡  ║│
+     ║ [█████░░░░░] ║│
+     ╚════════════╝┘
+
+    ⏱️  Time remaining: 3:32
+
+    ════════════════════════════════════════════════════
+    🌱 Your MacBook is breathing easier now!
 ```
-
-For AUTO-KILL processes, terminate without asking (unless user wants to review).
-For NEEDS CONFIRMATION, use AskUserQuestion before terminating.
