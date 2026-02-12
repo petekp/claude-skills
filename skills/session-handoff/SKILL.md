@@ -70,13 +70,16 @@ Identify and categorize:
 
 ### 4. Output
 
-Copy the bootstrap prompt to clipboard using:
+**Always do both:**
+
+1. **Display the full prompt** in a fenced code block so the user can see and manually copy it
+2. **Copy to clipboard** using `pbcopy`:
 
 ```bash
 echo "PROMPT_CONTENT" | pbcopy  # macOS
 ```
 
-Confirm with: "Bootstrap prompt copied to clipboard. Paste it to start a new session."
+Confirm with: "Bootstrap prompt copied to clipboard (and displayed above in case you need it later)."
 
 ## Adaptive Sizing
 
