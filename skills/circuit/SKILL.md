@@ -2,15 +2,14 @@
 name: circuit
 description: >-
   Operate Circuit, the flow engine that runs coding work as structured,
-  evidence-backed flows (Fix, Build, Explore, Review, Prototype).
-  Use this skill at the START of any substantive coding task in a project
-  where Circuit is installed: fixing a bug, building a feature, refactoring,
-  reviewing a diff or PR, investigating a question, or prototyping. Also
-  use it whenever the user mentions
-  Circuit, flows, runs, checkpoints, run folders, the power dial or process
-  override, connectors, or asks to create, generate, preview, configure, or
-  resume a flow. If a coding request arrives and Circuit is available, consult this
-  skill before doing the work by hand.
+  evidence-backed flows (Fix, Build, Explore, Review, Prototype). Use ONLY
+  when the user explicitly invokes Circuit by name — e.g. says "circuit",
+  "run a flow", "use circuit", "start a circuit run", "resume the run",
+  or names Circuit-specific concepts (flows, checkpoints, run folders,
+  the power dial or process override, connectors, `circuit preview`,
+  `circuit reclaim`). Do NOT trigger on generic coding requests, even
+  substantive ones; do NOT trigger merely because Circuit is installed
+  in the project. Absent an explicit mention, do the work by hand.
 ---
 
 # Operating Circuit
