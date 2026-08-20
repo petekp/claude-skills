@@ -277,6 +277,16 @@
             "command": "$HOME/.claude/scripts/mcp-auth-watch.sh SessionStart"
           }
         ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/petepetrash/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -306,6 +316,17 @@
           {
             "type": "command",
             "command": "/bin/sh -c 'TOKEN=$(cat \"$HOME/.capacitor/runtime/runtime-service-7474.token\" 2>/dev/null); /usr/bin/curl -fsS --connect-timeout 1 --max-time 1 -X POST \"http://127.0.0.1:7474/hook\" -H \"Content-Type: application/json\" -H \"Authorization: Bearer $TOKEN\" --data-binary @- >/dev/null 2>&1 || true'"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/scripts/gh-skill-nudge.sh\" 2>/dev/null || true",
+            "if": "Bash(gh *)",
+            "timeout": 5
           }
         ]
       }
@@ -398,6 +419,7 @@
       }
     ]
   },
+  "enableArtifact": false,
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline-command.sh"
@@ -448,10 +470,13 @@
   "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
   "skipWorkflowUsageWarning": true,
-  "verbose": true,
+  "editorMode": "normal",
+  "verbose": false,
   "preferredNotifChannel": "notifications_disabled",
+  "autoCompactEnabled": true,
   "terminalProgressBarEnabled": false,
   "remoteControlAtStartup": true,
+  "crossSessionInbound": "accept",
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
   "useAutoModeDuringPlan": true,
