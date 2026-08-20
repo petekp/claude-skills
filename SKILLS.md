@@ -14,17 +14,19 @@ came from instead, so the set can be rebuilt on another machine.
 
 Regenerate with `./scripts/gen-skills-manifest.sh` after adding or removing a skill.
 
-## Installed via skills.sh (15)
+## Installed via skills.sh (18)
 
 Reinstall any of these with `npx skills add <source>`.
 
 | Skill | Source | Updated |
 |---|---|---|
 | `agent-browser` | [vercel-labs/agent-browser](https://github.com/vercel-labs/agent-browser) | 2026-07-23 |
+| `better-github-skill` | [AVGVSTVS96/better-github-skill](https://github.com/AVGVSTVS96/better-github-skill) | 2026-08-15 |
 | `defining-product-strategy` | [refoundai/lenny-skills](https://github.com/refoundai/lenny-skills) | 2026-08-07 |
-| `domain-modeling` | [mattpocock/skills](https://github.com/mattpocock/skills) | 2026-07-31 |
+| `domain-modeling` | [mattpocock/skills](https://github.com/mattpocock/skills) | 2026-08-15 |
 | `frontend-design` | [anthropics/skills](https://github.com/anthropics/skills) | 2026-07-29 |
-| `grilling` | [mattpocock/skills](https://github.com/mattpocock/skills) | 2026-07-31 |
+| `grilling` | [mattpocock/skills](https://github.com/mattpocock/skills) | 2026-08-15 |
+| `herdr` | [herdrdev/herdr](https://github.com/herdrdev/herdr) | 2026-08-09 |
 | `knowledge-synthesis` | [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins) | 2026-08-06 |
 | `north-star-metrics` | [refoundai/lenny-skills](https://github.com/refoundai/lenny-skills) | 2026-08-07 |
 | `product-taste` | [refoundai/lenny-skills](https://github.com/refoundai/lenny-skills) | 2026-08-07 |
@@ -34,9 +36,10 @@ Reinstall any of these with `npx skills add <source>`.
 | `stop-slop` | [hardikpandya/stop-slop](https://github.com/hardikpandya/stop-slop) | 2026-05-15 |
 | `vercel-composition-patterns` | [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills) | 2026-04-09 |
 | `vercel-react-best-practices` | [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills) | 2026-04-21 |
+| `wayfinder` | [mattpocock/skills](https://github.com/mattpocock/skills) | 2026-08-17 |
 | `writing-prds` | [refoundai/lenny-skills](https://github.com/refoundai/lenny-skills) | 2026-08-06 |
 
-## Linked, source not recorded (1)
+## Linked, source not recorded (2)
 
 These have no entry in the skills.sh lockfile, so there is no source URL to
 reinstall from. A link into `~/.agents/skills` here means the skill was put
@@ -45,21 +48,23 @@ another repo on this machine, which has to be cloned separately.
 
 | Skill | Link target |
 |---|---|
+| `show-me` | `~/.agents/skills/show-me` |
 | `write-as-pete` | `~/Code/personality/voice/skill/write-as-pete` |
 
-## Authored in this repo (18)
+## Authored in this repo (19)
 
 Real directories, tracked in git, no external source.
 
+- `calldiff`
 - `catch-up`
 - `circuit`
 - `circuit-resource-analysis`
 - `claude-code-audit`
 - `code-comments`
 - `deep-research`
-- `emil-design-eng`
+- `discernment-nudge`
 - `exhaustive-systems-analysis`
-- `fixing-motion-performance`
+- `improve-codebase-architecture`
 - `latent-potential`
 - `literate-guide`
 - `plain`
