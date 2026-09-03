@@ -36,13 +36,11 @@
       "Bash(cd * && swift build *)",
       "Bash(cd * && swift run)",
       "Bash(cd * && swift run *)",
-      "Bash(chmod *)",
       "Bash(claude plugin *)",
       "Bash(claude skill --help *)",
       "Bash(claude skills --help *)",
       "Bash(curl *)",
       "Bash(echo *)",
-      "Bash(env)",
       "Bash(find *)",
       "Bash(gh *)",
       "Bash(git *)",
@@ -51,9 +49,7 @@
       "Bash(lsof *)",
       "Bash(ls *)",
       "Bash(mkdir *)",
-      "Bash(node -e *)",
       "Bash(npm *)",
-      "Bash(npx *)",
       "Bash(pbcopy *)",
       "Bash(pgrep *)",
       "Bash(pkill *)",
@@ -65,7 +61,6 @@
       "Bash(tree *)",
       "Bash(vercel *)",
       "Bash(wc *)",
-      "Bash(xargs *)",
       "Bash(yes *)",
       "mcp__ide__getDiagnostics",
       "Skill",
@@ -161,8 +156,6 @@
       "Bash(tmux show-options:*)",
       "Bash(tmux show:*)",
       "Bash(ghostty +show-config:*)",
-      "Bash(zsh:*)",
-      "Bash(bash:*)",
       "Bash(test:*)",
       "Skill(plugin-dev:skill-development)",
       "Bash(claude /doctor)",
@@ -196,17 +189,9 @@
     ],
     "respectGitignore": true
   },
-  "model": "opus[1m]",
+  "model": "claude-fable-5",
   "hooks": {
     "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/bin/sh -c 'TOKEN=$(cat \"$HOME/.capacitor/runtime/runtime-service-7474.token\" 2>/dev/null); /usr/bin/curl -fsS --connect-timeout 1 --max-time 1 -X POST \"http://127.0.0.1:7474/hook\" -H \"Content-Type: application/json\" -H \"Authorization: Bearer $TOKEN\" --data-binary @- >/dev/null 2>&1 || true'"
-          }
-        ]
-      },
       {
         "hooks": [
           {
@@ -216,34 +201,47 @@
         ]
       }
     ],
-    "PermissionRequest": [
+    "PostToolUse": [
       {
-        "matcher": "*",
+        "matcher": "Skill",
         "hooks": [
           {
             "type": "command",
-            "command": "/bin/sh -c 'TOKEN=$(cat \"$HOME/.capacitor/runtime/runtime-service-7474.token\" 2>/dev/null); /usr/bin/curl -fsS --connect-timeout 1 --max-time 1 -X POST \"http://127.0.0.1:7474/hook\" -H \"Content-Type: application/json\" -H \"Authorization: Bearer $TOKEN\" --data-binary @- >/dev/null 2>&1 || true'"
+            "command": "~/.claude/scripts/skill-usage-tracker.sh"
           }
         ]
       }
     ],
-    "SubagentStop": [
+    "SessionEnd": [
       {
+        "matcher": "",
         "hooks": [
           {
             "type": "command",
-            "command": "/bin/sh -c 'TOKEN=$(cat \"$HOME/.capacitor/runtime/runtime-service-7474.token\" 2>/dev/null); /usr/bin/curl -fsS --connect-timeout 1 --max-time 1 -X POST \"http://127.0.0.1:7474/hook\" -H \"Content-Type: application/json\" -H \"Authorization: Bearer $TOKEN\" --data-binary @- >/dev/null 2>&1 || true'"
+            "command": "~/.claude/scripts/session-end-cleanup.sh"
           }
         ]
       }
     ],
-    "PostToolUseFailure": [
+    "PreToolUse": [
       {
-        "matcher": "*",
+        "matcher": "Bash",
         "hooks": [
           {
             "type": "command",
-            "command": "/bin/sh -c 'TOKEN=$(cat \"$HOME/.capacitor/runtime/runtime-service-7474.token\" 2>/dev/null); /usr/bin/curl -fsS --connect-timeout 1 --max-time 1 -X POST \"http://127.0.0.1:7474/hook\" -H \"Content-Type: application/json\" -H \"Authorization: Bearer $TOKEN\" --data-binary @- >/dev/null 2>&1 || true'"
+            "command": "bash \"$HOME/.claude/scripts/gh-skill-nudge.sh\" 2>/dev/null || true",
+            "if": "Bash(gh *)",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/scripts/skill-usage-tracker.sh"
           }
         ]
       }
@@ -266,14 +264,6 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/bin/sh -c 'TOKEN=$(cat \"$HOME/.capacitor/runtime/runtime-service-7474.token\" 2>/dev/null); /usr/bin/curl -fsS --connect-timeout 1 --max-time 1 -X POST \"http://127.0.0.1:7474/hook\" -H \"Content-Type: application/json\" -H \"Authorization: Bearer $TOKEN\" --data-binary @- >/dev/null 2>&1 || true'"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
             "command": "$HOME/.claude/scripts/mcp-auth-watch.sh SessionStart"
           }
         ]
@@ -288,138 +278,8 @@
           }
         ]
       }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Skill",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/scripts/skill-usage-tracker.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/bin/sh -c 'TOKEN=$(cat \"$HOME/.capacitor/runtime/runtime-service-7474.token\" 2>/dev/null); /usr/bin/curl -fsS --connect-timeout 1 --max-time 1 -X POST \"http://127.0.0.1:7474/hook\" -H \"Content-Type: application/json\" -H \"Authorization: Bearer $TOKEN\" --data-binary @- >/dev/null 2>&1 || true'"
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/bin/sh -c 'TOKEN=$(cat \"$HOME/.capacitor/runtime/runtime-service-7474.token\" 2>/dev/null); /usr/bin/curl -fsS --connect-timeout 1 --max-time 1 -X POST \"http://127.0.0.1:7474/hook\" -H \"Content-Type: application/json\" -H \"Authorization: Bearer $TOKEN\" --data-binary @- >/dev/null 2>&1 || true'"
-          }
-        ]
-      },
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash \"$HOME/.claude/scripts/gh-skill-nudge.sh\" 2>/dev/null || true",
-            "if": "Bash(gh *)",
-            "timeout": 5
-          }
-        ]
-      }
-    ],
-    "SessionEnd": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/scripts/session-end-cleanup.sh"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/bin/sh -c 'TOKEN=$(cat \"$HOME/.capacitor/runtime/runtime-service-7474.token\" 2>/dev/null); /usr/bin/curl -fsS --connect-timeout 1 --max-time 1 -X POST \"http://127.0.0.1:7474/hook\" -H \"Content-Type: application/json\" -H \"Authorization: Bearer $TOKEN\" --data-binary @- >/dev/null 2>&1 || true'"
-          }
-        ]
-      }
-    ],
-    "PreCompact": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/bin/sh -c 'TOKEN=$(cat \"$HOME/.capacitor/runtime/runtime-service-7474.token\" 2>/dev/null); /usr/bin/curl -fsS --connect-timeout 1 --max-time 1 -X POST \"http://127.0.0.1:7474/hook\" -H \"Content-Type: application/json\" -H \"Authorization: Bearer $TOKEN\" --data-binary @- >/dev/null 2>&1 || true'"
-          }
-        ]
-      }
-    ],
-    "TeammateIdle": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/bin/sh -c 'TOKEN=$(cat \"$HOME/.capacitor/runtime/runtime-service-7474.token\" 2>/dev/null); /usr/bin/curl -fsS --connect-timeout 1 --max-time 1 -X POST \"http://127.0.0.1:7474/hook\" -H \"Content-Type: application/json\" -H \"Authorization: Bearer $TOKEN\" --data-binary @- >/dev/null 2>&1 || true'"
-          }
-        ]
-      }
-    ],
-    "TaskCompleted": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/bin/sh -c 'TOKEN=$(cat \"$HOME/.capacitor/runtime/runtime-service-7474.token\" 2>/dev/null); /usr/bin/curl -fsS --connect-timeout 1 --max-time 1 -X POST \"http://127.0.0.1:7474/hook\" -H \"Content-Type: application/json\" -H \"Authorization: Bearer $TOKEN\" --data-binary @- >/dev/null 2>&1 || true'"
-          }
-        ]
-      }
-    ],
-    "SubagentStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/bin/sh -c 'TOKEN=$(cat \"$HOME/.capacitor/runtime/runtime-service-7474.token\" 2>/dev/null); /usr/bin/curl -fsS --connect-timeout 1 --max-time 1 -X POST \"http://127.0.0.1:7474/hook\" -H \"Content-Type: application/json\" -H \"Authorization: Bearer $TOKEN\" --data-binary @- >/dev/null 2>&1 || true'"
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/scripts/skill-usage-tracker.sh"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/bin/sh -c 'TOKEN=$(cat \"$HOME/.capacitor/runtime/runtime-service-7474.token\" 2>/dev/null); /usr/bin/curl -fsS --connect-timeout 1 --max-time 1 -X POST \"http://127.0.0.1:7474/hook\" -H \"Content-Type: application/json\" -H \"Authorization: Bearer $TOKEN\" --data-binary @- >/dev/null 2>&1 || true'"
-          }
-        ]
-      }
-    ],
-    "Notification": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/bin/sh -c 'TOKEN=$(cat \"$HOME/.capacitor/runtime/runtime-service-7474.token\" 2>/dev/null); /usr/bin/curl -fsS --connect-timeout 1 --max-time 1 -X POST \"http://127.0.0.1:7474/hook\" -H \"Content-Type: application/json\" -H \"Authorization: Bearer $TOKEN\" --data-binary @- >/dev/null 2>&1 || true'"
-          }
-        ]
-      }
     ]
   },
-  "enableArtifact": false,
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline-command.sh"
@@ -465,6 +325,17 @@
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "medium",
+  "modelSettings": {
+    "claude-fable-5": {
+      "effortLevel": "medium"
+    },
+    "claude-opus-5": {
+      "effortLevel": "xhigh"
+    },
+    "claude-fable-5-1": {
+      "effortLevel": "xhigh"
+    }
+  },
   "autoCompactWindow": 250000,
   "autoUpdatesChannel": "latest",
   "tui": "fullscreen",
@@ -480,6 +351,44 @@
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
   "useAutoModeDuringPlan": true,
+  "autoMode": {
+    "allow": [
+      "$defaults",
+      "Bash(npx *) in /Users/petepetrash/Code/munari",
+      "Bash(vercel *) in /Users/petepetrash/Code/munari"
+    ],
+    "soft_deny": [
+      "$defaults",
+      "Bash(vercel --prod*) in /Users/petepetrash/Code/munari",
+      "Bash(rm -rf*) in /Users/petepetrash/Code/munari"
+    ],
+    "environment": [
+      "### Org-wide",
+      "**Organization**: None configured",
+      "**Cloud provider(s)**: None configured",
+      "**Repository visibility**: Private (petekp/munari, confirmed via gh)",
+      "**Internal sharing / snippet hosting**: None configured — treat public paste/gist services as outside the trust boundary",
+      "**Secrets management**: None configured",
+      "**Default / protected branches**: main (default); no branch protection rules or rulesets listed via gh",
+      "**CI/CD deploy targets**: None configured (vercel CLI seen 2× in usage but no deploy target confirmed in config)",
+      "**Network posture**: None configured",
+      "**Source control**: github.com:petekp/munari.git (this repo's only remote) — private",
+      "**Trusted internal domains**: None configured",
+      "**Trusted cloud buckets**: None configured",
+      "**Key internal services**: munari.vercel.app (contacted 7× in project transcripts)",
+      "**Internal package registry**: None configured",
+      "**Sensitive data locations & audiences**: any file or store holding personal data, confidential business data, credentials, regulated data, or similarly sensitive material; preserve exact handles when known and share only with audiences cleared at the [named+specifics] bar",
+      "**Data retention / declassification**: None configured",
+      "**Sensitive remote targets**: any namespace, host, or container whose name carries `prod` or `production` as a whole word or name segment (hyphen/underscore/dot-delimited — e.g. matches `prod-db`, not `producer`)",
+      "**Protected deployment namespaces / environments**: None configured — fall back to the Sensitive remote targets heuristic",
+      "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod` or `production` as a whole word or name segment",
+      "### User-specific",
+      "**Primary use of Claude Code**: software development (WebGL/DOM bridging library — munari)",
+      "**Trusted repo**: /Users/petepetrash/Code/munari (github.com:petekp/munari.git, private) — confidential material OK to commit here; content ported from outside this repo is not this repo's own work",
+      "**Org-specific CLIs**: None configured",
+      "routine under petekp/ prefix: git pushes to github.com:petekp/munari.git treated as this project's own trusted push destination"
+    ]
+  },
   "feedbackSurveyState": {
     "lastShownTime": 1753981396935
   }
