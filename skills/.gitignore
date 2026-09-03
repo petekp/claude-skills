@@ -4,7 +4,9 @@
 # are recorded in SKILLS.md rather than committed. See that file for sources.
 
 agent-browser
+arena
 better-github-skill
+blast-radius
 defining-product-strategy
 domain-modeling
 frontend-design
@@ -21,5 +23,6 @@ stop-slop
 vercel-composition-patterns
 vercel-react-best-practices
 wayfinder
+why
 write-as-pete
 writing-prds

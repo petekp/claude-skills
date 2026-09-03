@@ -5,11 +5,11 @@ description: Restate dense, jargon-heavy, or hard-to-follow content in plain lan
 
 # Plain
 
-Restate something in language a smart person outside the field would understand on first read. The user invokes this when a previous explanation was too dense to follow. Your job is translation, not summarization: keep the full meaning, change the delivery.
+Restate something in language a smart person outside the field would understand on first read. The user invokes this when a previous explanation was too dense to follow — and usually too long, which is part of what made it hard to follow. Your job is translation plus compression: keep the points the user actually needs, explain those plainly, and drop the rest. Cut breadth, not depth — a lesser point goes away entirely; a kept point still gets a real explanation.
 
 ## What to restate
 
-- **No arguments**: restate your own previous response in this conversation.
+- **No arguments**: restate your own previous response in this conversation. Cut it down, don't just reword it — its length was part of the problem.
 - **Pasted text or a file path**: restate that content. Read the file first if given a path.
 - **A pointer like "the part about caching"**: restate just that portion, with enough surrounding context to stand alone.
 
@@ -29,7 +29,7 @@ Write for a sharp, capable adult who doesn't live in this domain. Not a child �
 
 **Keep the caveats that matter.** Simplifying by omitting a load-bearing exception produces something clear and wrong. If the original hedged for a real reason, keep the hedge but say it plainly: "this works unless the data changes often, in which case..."
 
-**Don't balloon.** Plain doesn't mean padded. The restatement should be about the length of the original or shorter. If you find yourself writing more than the original, you're adding, not translating.
+**Come in shorter.** A single dense sentence can take more words than it had — unpacking jargon isn't free — but the allowance stops there. A dense paragraph should come back shorter, and a full response should come back at half its length or less. Get there by cutting scope, not clarity: make each point once, use at most one example, and drop lesser points entirely instead of explaining everything a little. If the draft ended up longer than the original, cut before sending.
 
 **Check understanding is even possible.** If the original was dense because it glossed over something you'd need to explain properly, say so: "the short version is X; the part I skipped over is Y — want me to unpack that too?"
 
@@ -52,10 +52,10 @@ These patterns (catalogued in Wikipedia's "Signs of AI writing") make prose feel
 > The middleware intercepts inbound requests and performs JWT validation against the issuer's JWKS endpoint, short-circuiting the request lifecycle with a 401 on signature verification failure, thereby ensuring downstream handlers operate exclusively on authenticated contexts.
 
 **Plain restatement:**
-> Before any request reaches your actual route code, a checkpoint runs first. It looks at the login token the request carries and checks the token's signature against the login provider's published keys to make sure it's genuine. If the check fails, the request gets rejected right there with a 401 error. The point is that your route code never has to worry about unauthenticated requests — anything that reaches it already passed the checkpoint.
+> Before any request reaches your route code, a checkpoint checks the login token it carries against the login provider's published keys to make sure it's genuine. If the check fails, the request is rejected on the spot with a 401, so your route code only ever sees authenticated requests.
 
 **Dense original:**
 > Hydration mismatches arise when the server-rendered markup diverges from the client's initial render output, forcing React to discard the SSR payload and re-render, negating the performance benefits of server rendering.
 
 **Plain restatement:**
-> The server builds the page's HTML and sends it down so the user sees something fast. Then React runs in the browser and builds its own version of the same page. Those two versions are supposed to match exactly. When they don't — say the server rendered a timestamp and the browser computes a different one — React throws away the server's HTML and rebuilds the page from scratch. You paid the cost of server rendering and got none of the benefit.
+> The server sends ready-made HTML so the page shows up fast; React then builds the same page again in the browser, and the two versions must match exactly. When they differ — a timestamp computed differently on each side, say — React throws out the server's HTML and rebuilds from scratch, so the server rendering bought you nothing.

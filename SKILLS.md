@@ -14,14 +14,16 @@ came from instead, so the set can be rebuilt on another machine.
 
 Regenerate with `./scripts/gen-skills-manifest.sh` after adding or removing a skill.
 
-## Installed via skills.sh (18)
+## Installed via skills.sh (21)
 
 Reinstall any of these with `npx skills add <source>`.
 
 | Skill | Source | Updated |
 |---|---|---|
 | `agent-browser` | [vercel-labs/agent-browser](https://github.com/vercel-labs/agent-browser) | 2026-07-23 |
+| `arena` | [cursor/plugins](https://github.com/cursor/plugins) | 2026-09-01 |
 | `better-github-skill` | [AVGVSTVS96/better-github-skill](https://github.com/AVGVSTVS96/better-github-skill) | 2026-08-15 |
+| `blast-radius` | [cursor/plugins](https://github.com/cursor/plugins) | 2026-09-01 |
 | `defining-product-strategy` | [refoundai/lenny-skills](https://github.com/refoundai/lenny-skills) | 2026-08-07 |
 | `domain-modeling` | [mattpocock/skills](https://github.com/mattpocock/skills) | 2026-08-15 |
 | `frontend-design` | [anthropics/skills](https://github.com/anthropics/skills) | 2026-07-29 |
@@ -37,6 +39,7 @@ Reinstall any of these with `npx skills add <source>`.
 | `vercel-composition-patterns` | [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills) | 2026-04-09 |
 | `vercel-react-best-practices` | [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills) | 2026-04-21 |
 | `wayfinder` | [mattpocock/skills](https://github.com/mattpocock/skills) | 2026-08-17 |
+| `why` | [cursor/plugins](https://github.com/cursor/plugins) | 2026-09-01 |
 | `writing-prds` | [refoundai/lenny-skills](https://github.com/refoundai/lenny-skills) | 2026-08-06 |
 
 ## Linked, source not recorded (2)
@@ -51,7 +54,7 @@ another repo on this machine, which has to be cloned separately.
 | `show-me` | `~/.agents/skills/show-me` |
 | `write-as-pete` | `~/Code/personality/voice/skill/write-as-pete` |
 
-## Authored in this repo (19)
+## Authored in this repo (20)
 
 Real directories, tracked in git, no external source.
 
@@ -64,6 +67,7 @@ Real directories, tracked in git, no external source.
 - `deep-research`
 - `discernment-nudge`
 - `exhaustive-systems-analysis`
+- `frame-check`
 - `improve-codebase-architecture`
 - `latent-potential`
 - `literate-guide`
