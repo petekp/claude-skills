@@ -1,4 +1,4 @@
 interface:
   display_name: "PR Screenshot Comparison"
-  short_description: "Create polished before-and-after PR screenshots"
-  default_prompt: "Use $pr-screenshot-comparison to create and attach a cropped before-and-after image to this PR."
+  short_description: "Capture actual product before-and-after PR screenshots"
+  default_prompt: "Use $pr-screenshot-comparison to capture the actual product on the base and PR commits, then create and attach one cropped before-and-after image to this PR."
