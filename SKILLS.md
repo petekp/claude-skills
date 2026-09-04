@@ -54,7 +54,7 @@ another repo on this machine, which has to be cloned separately.
 | `show-me` | `~/.agents/skills/show-me` |
 | `write-as-pete` | `~/Code/personality/voice/skill/write-as-pete` |
 
-## Authored in this repo (20)
+## Authored in this repo (21)
 
 Real directories, tracked in git, no external source.
 
@@ -72,6 +72,7 @@ Real directories, tracked in git, no external source.
 - `latent-potential`
 - `literate-guide`
 - `plain`
+- `pr-description`
 - `pr-screenshot-comparison`
 - `pr-self-review`
 - `react-change-review`
